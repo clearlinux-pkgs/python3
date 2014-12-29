@@ -1,0 +1,22 @@
+From e1e476f2020161f6f9a0c038878e3ef5f2e32d5a Mon Sep 17 00:00:00 2001
+From: William Douglas <william.douglas@intel.com>
+Date: Tue, 10 Jun 2014 12:54:26 -0700
+Subject: [PATCH] Fix python path for linux
+
+---
+ Lib/cgi.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Lib/cgi.py b/Lib/cgi.py
+index 1ef780c..229f4ca 100755
+--- a/Lib/cgi.py
++++ b/Lib/cgi.py
+@@ -1,4 +1,4 @@
+-#! /usr/local/bin/python
++#!/usr/bin/env python3
+ 
+ # NOTE: the above "/usr/local/bin/python" is NOT a mistake.  It is
+ # intentionally NOT "/usr/bin/env python".  On many systems
+-- 
+1.9.2
+

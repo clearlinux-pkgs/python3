@@ -1,0 +1,26 @@
+From 4aace7915de2310074ba3f56c0f03d2bb7d21d64 Mon Sep 17 00:00:00 2001
+From: William Douglas <william.douglas@intel.com>
+Date: Mon, 21 Jul 2014 10:56:56 -0700
+Subject: [PATCH] Force pip reinstall
+
+Signed-off-by: William Douglas <william.douglas@intel.com>
+---
+ Lib/ensurepip/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Lib/ensurepip/__init__.py b/Lib/ensurepip/__init__.py
+index 84c2125..c0a41d5 100644
+--- a/Lib/ensurepip/__init__.py
++++ b/Lib/ensurepip/__init__.py
+@@ -107,7 +107,7 @@ def bootstrap(*, root=None, upgrade=False, user=False,
+         if root:
+             args += ["--root", root]
+         if upgrade:
+-            args += ["--upgrade"]
++            args += ["--upgrade", "--force-reinstall", "--ignore-installed"]
+         if user:
+             args += ["--user"]
+         if verbosity:
+-- 
+2.0.1
+
