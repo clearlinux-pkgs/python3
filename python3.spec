@@ -1,16 +1,15 @@
 Name:           python3
-Version:        3.4.3
-Release:        19
+Version:        3.5.0
+Release:        20
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tar.xz
+Source0:        https://www.python.org/ftp/python/3.5.0/Python-3.5.0.tar.xz
 Patch0:         0001-Fix-python-path-for-linux.patch
 # Causes test-suite failures
 #Patch1:         0001-ensure-pip-upgrade.patch
 Patch1:         skip-some-tests.patch
-Patch2:         fix-gcc-5-bug.patch
 BuildRequires:  bzip2
 BuildRequires:  db
 BuildRequires:  grep
@@ -76,7 +75,6 @@ The Python Programming Language.
 %patch0 -p1
 # Todo fix these
 %patch1 -p1
-%patch2 -p1
 
 %build
 export LANG=C
@@ -104,36 +102,36 @@ export LANG=C
 LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid || :
 
 %files lib
-/usr/lib64/libpython3.4m.so.1.0
+/usr/lib64/libpython3.5m.so.1.0
 
 %files core
 %exclude %{_bindir}/2to3
-%{_bindir}/2to3-3.4
-%{_bindir}/easy_install-3.4
+%{_bindir}/2to3-3.5
+%{_bindir}/easy_install-3.5
 %{_bindir}/idle3
-%{_bindir}/idle3.4
+%{_bindir}/idle3.5
 %{_bindir}/pip3
-%{_bindir}/pip3.4
+%{_bindir}/pip3.5
 %{_bindir}/pydoc3
-%{_bindir}/pydoc3.4
+%{_bindir}/pydoc3.5
 %{_bindir}/python3
 %{_bindir}/python3-config
-%{_bindir}/python3.4
-%{_bindir}/python3.4-config
-%{_bindir}/python3.4m
-%{_bindir}/python3.4m-config
+%{_bindir}/python3.5
+%{_bindir}/python3.5-config
+%{_bindir}/python3.5m
+%{_bindir}/python3.5m-config
 %{_bindir}/pyvenv
-%{_bindir}/pyvenv-3.4
-/usr/lib/python3.4/
+%{_bindir}/pyvenv-3.5
+/usr/lib/python3.5/
 
 %files dev
-%{_includedir}/python3.4m/*.h
+%{_includedir}/python3.5m/*.h
 /usr/lib64/libpython3.so
-/usr/lib64/libpython3.4m.so
+/usr/lib64/libpython3.5m.so
 /usr/lib64/pkgconfig/python3.pc
-/usr/lib64/pkgconfig/python-3.4.pc
-/usr/lib64/pkgconfig/python-3.4m.pc
+/usr/lib64/pkgconfig/python-3.5.pc
+/usr/lib64/pkgconfig/python-3.5m.pc
 
 %files doc
-%{_mandir}/man1/python3.4.1
+%{_mandir}/man1/python3.5.1
 %{_mandir}/man1/python3.1
