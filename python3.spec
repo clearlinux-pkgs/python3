@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.5.0
-Release:        20
+Release:        21
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -48,6 +48,7 @@ Group:          devel/python
 Provides:       python3
 Provides:       python3-modules
 Provides:       /bin/python3
+Provides:       python(abi) = 3.4
 
 %description core
 The Python Programming Language.
