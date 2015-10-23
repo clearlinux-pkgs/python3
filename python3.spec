@@ -59,6 +59,9 @@ Group:          devel
 Requires:       python3-lib
 Requires:       python3-core
 
+%define python_configure_flags  --with-threads --with-pymalloc  --with-ensurepip=upgrade --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat
+
+
 %description dev
 The Python Programming Language.
 
@@ -78,18 +81,8 @@ The Python Programming Language.
 
 %build
 export LANG=C
-%configure --with-threads \
- --with-pymalloc \
- --with-ensurepip=upgrade \
- --without-cxx-main \
- --with-signal-module \
- --enable-shared \
- --enable-ipv6=yes \
- --libdir=/usr/lib \
- ac_cv_header_bluetooth_bluetooth_h=no \
- ac_cv_header_bluetooth_h=no \
- --with-system-ffi --with-system-expat
 
+%configure %python_configure_flags --enable-shared
 make %{?_smp_mflags}
 
 %install
@@ -100,6 +93,12 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 export LANG=C
 
 LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid || :
+
+# Build with PGO for perf improvement
+make clean
+%configure %python_configure_flags
+make profile-opt %{?_smp_mflags}
+%make_install
 
 %files lib
 /usr/lib64/libpython3.5m.so.1.0
