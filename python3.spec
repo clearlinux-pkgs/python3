@@ -10,6 +10,7 @@ Patch0:         0001-Fix-python-path-for-linux.patch
 # Causes test-suite failures
 #Patch1:         0001-ensure-pip-upgrade.patch
 Patch1:         skip-some-tests.patch
+Patch2:		urandom-block-fix.patch
 BuildRequires:  bzip2
 BuildRequires:  db
 BuildRequires:  grep
@@ -78,6 +79,8 @@ The Python Programming Language.
 %patch0 -p1
 # Todo fix these
 %patch1 -p1
+# make the code not block on getrandom during boot
+%patch2 -p1
 
 %build
 export LANG=C
