@@ -1,0 +1,117 @@
+From 97f9a967cc0bb48f5b0771ef425faf677251082f Mon Sep 17 00:00:00 2001
+From: William Douglas <william.douglas@intel.com>
+Date: Fri, 30 Oct 2015 16:16:06 -0400
+Subject: [PATCHv2 python3] Replace getrandom syscall with RDRAND instruction
+
+Instead of using getrandom which can block and cause issues when
+entropy is low, switch to using the RDRAND instruction. This should
+have a test introduced for when the RDRAND instruction is available
+but for now the platforms we support should have it.
+---
+ Python/random.c | 63 +++++++++++++++++++++++++++------------------------------
+ 1 file changed, 30 insertions(+), 33 deletions(-)
+
+diff --git a/Python/random.c b/Python/random.c
+index ea09e84..bf464f5 100644
+--- a/Python/random.c
++++ b/Python/random.c
+@@ -7,6 +7,10 @@
+ #    include <sys/stat.h>
+ #  endif
+ #  ifdef HAVE_GETRANDOM_SYSCALL
++#    pragma GCC push_options
++#    pragma GCC target("rdrnd")
++#    include <immintrin.h>
++#    include <stdint.h>
+ #    include <sys/syscall.h>
+ #  endif
+ #endif
+@@ -111,55 +115,42 @@ py_getentropy(unsigned char *buffer, Py_ssize_t size, int fatal)
+ static int
+ py_getrandom(void *buffer, Py_ssize_t size, int raise)
+ {
+-    /* is getrandom() supported by the running kernel?
+-     * need Linux kernel 3.17 or later */
+-    static int getrandom_works = 1;
+-    /* Use /dev/urandom, block if the kernel has no entropy */
+-    const int flags = 0;
+     int n;
+-
+-    if (!getrandom_works)
+-        return 0;
++    int f = 0;
+ 
+     while (0 < size) {
+-        errno = 0;
++        uint32_t val;
+ 
+-        /* Use syscall() because the libc doesn't expose getrandom() yet, see:
+-         * https://sourceware.org/bugzilla/show_bug.cgi?id=17252 */
+         if (raise) {
+             Py_BEGIN_ALLOW_THREADS
+-            n = syscall(SYS_getrandom, buffer, size, flags);
++            n = _rdrand32_step(&val);
+             Py_END_ALLOW_THREADS
+         }
+         else {
+-            n = syscall(SYS_getrandom, buffer, size, flags);
++            n = _rdrand32_step(&val);
+         }
+ 
+-        if (n < 0) {
+-            if (errno == ENOSYS) {
+-                getrandom_works = 0;
+-                return 0;
+-            }
+-
+-            if (errno == EINTR) {
+-                if (PyErr_CheckSignals()) {
+-                    if (!raise)
+-                        Py_FatalError("getrandom() interrupted by a signal");
++        if (!n) {
++            /* retry rdrand up to a point*/
++            if (f < 10) {
++                f++;
++                continue;
++            } else {
++                if (raise) {
++                    PyErr_SetString(PyExc_RuntimeError, "Repeated calls to rdrand failed");
++                } else {
++                    Py_FatalError("Repeated calls to rdrand failed");
+                     return -1;
+                 }
+-                /* retry getrandom() */
+-                continue;
+             }
+-
+-            if (raise)
+-                PyErr_SetFromErrno(PyExc_OSError);
+-            else
+-                Py_FatalError("getrandom() failed");
+-            return -1;
+         }
+ 
+-        buffer += n;
+-        size -= n;
++        for (uint i = 0; i < sizeof(uint32_t) && 0 < size; i++) {
++            char *t = ((char *)(&val)) + i;
++            memcpy(buffer, t, sizeof(char));
++            buffer++;
++            size--;
++        }
+     }
+     return 1;
+ }
+@@ -414,3 +405,9 @@ _PyRandom_Fini(void)
+     dev_urandom_close();
+ #endif
+ }
++
++#ifndef MS_WINDOWS
++#  ifdef HAVE_GETRANDOM_SYSCALL
++#    pragma GCC pop_options
++#  endif
++#endif
+-- 
+2.6.2
+

@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.5.0
-Release:        24
+Release:        25
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -10,7 +10,7 @@ Patch0:         0001-Fix-python-path-for-linux.patch
 # Causes test-suite failures
 #Patch1:         0001-ensure-pip-upgrade.patch
 Patch1:         skip-some-tests.patch
-Patch2:		urandom-block-fix.patch
+Patch2:         0001-Replace-getrandom-syscall-with-RDRAND-instruction.patch
 BuildRequires:  bzip2
 BuildRequires:  db
 BuildRequires:  grep
