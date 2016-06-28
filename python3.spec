@@ -97,11 +97,6 @@ export LANG=C
 
 LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid || :
 
-# Build with PGO for perf improvement
-make clean
-%configure %python_configure_flags
-make profile-opt %{?_smp_mflags}
-%make_install
 
 %files lib
 /usr/lib64/libpython3.5m.so.1.0
