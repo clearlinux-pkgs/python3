@@ -1,4 +1,4 @@
-From 2fc22011d5ce9dd6dc4f69fed554a7149ac89b4d Mon Sep 17 00:00:00 2001
+From e305ad02b74e605f9196dc86124a4923df6fc9c4 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Fri, 30 Oct 2015 16:16:06 -0400
 Subject: [PATCH] Replace getrandom syscall with RDRAND instruction
@@ -8,17 +8,17 @@ entropy is low, switch to using the RDRAND instruction. This tests for
 the the availability of the RDRAND instruction with gcc intrinsics and
 falls back to the syscall method if the instruction isn't available.
 ---
- Python/random.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ Python/random.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
 diff --git a/Python/random.c b/Python/random.c
-index ea09e84..afe479d 100644
+index 07dacfe..4fd3264 100644
 --- a/Python/random.c
 +++ b/Python/random.c
-@@ -7,6 +7,11 @@
- #    include <sys/stat.h>
- #  endif
- #  ifdef HAVE_GETRANDOM_SYSCALL
+@@ -12,6 +12,11 @@
+ #  ifdef HAVE_GETRANDOM
+ #    include <sys/random.h>
+ #  elif defined(HAVE_GETRANDOM_SYSCALL)
 +#    pragma GCC push_options
 +#    pragma GCC target("rdrnd")
 +#    include <cpuid.h>
@@ -27,12 +27,10 @@ index ea09e84..afe479d 100644
  #    include <sys/syscall.h>
  #  endif
  #endif
-@@ -108,6 +113,50 @@ py_getentropy(unsigned char *buffer, Py_ssize_t size, int fatal)
- #else   /* !HAVE_GETENTROPY */
+@@ -120,6 +125,50 @@ py_getentropy(unsigned char *buffer, Py_ssize_t size, int fatal)
+ #define PY_GETRANDOM 1
  
- #ifdef HAVE_GETRANDOM_SYSCALL
-+
-+static int
+ static int
 +py_getrdrand(void *buffer, Py_ssize_t size, int raise)
 +{
 +    int n;
@@ -75,13 +73,16 @@ index ea09e84..afe479d 100644
 +    return 1;
 +}
 +
- static int
++
++static int
  py_getrandom(void *buffer, Py_ssize_t size, int raise)
  {
-@@ -117,6 +166,13 @@ py_getrandom(void *buffer, Py_ssize_t size, int raise)
-     /* Use /dev/urandom, block if the kernel has no entropy */
-     const int flags = 0;
+     /* Is getrandom() supported by the running kernel?
+@@ -133,6 +182,15 @@ py_getrandom(void *buffer, Py_ssize_t size, int raise)
+      * GRND_NONBLOCK flag. */
+     const int flags = GRND_NONBLOCK;
      int n;
++#ifdef HAVE_GETRANDOM_SYSCALL
 +    unsigned int eax, ebx, ecx, edx;
 +
 +    /* Use RDRAND instead if available */
@@ -89,10 +90,11 @@ index ea09e84..afe479d 100644
 +    if (ecx & bit_RDRND) {
 +        return py_getrdrand(buffer, size, raise);
 +    }
++#endif
  
      if (!getrandom_works)
          return 0;
-@@ -414,3 +470,9 @@ _PyRandom_Fini(void)
+@@ -460,3 +518,9 @@ _PyRandom_Fini(void)
      dev_urandom_close();
  #endif
  }
@@ -103,5 +105,5 @@ index ea09e84..afe479d 100644
 +#  endif
 +#endif
 -- 
-2.6.3
+2.4.11
 
