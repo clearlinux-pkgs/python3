@@ -11,6 +11,7 @@ Patch0:         0001-Fix-python-path-for-linux.patch
 #Patch1:         0001-ensure-pip-upgrade.patch
 Patch1:         skip-some-tests.patch
 Patch2:         0001-Replace-getrandom-syscall-with-RDRAND-instruction.patch
+Patch3:         0001-Enable-Profile-Guided-Optimization-for-pybench.patch
 BuildRequires:  bzip2
 BuildRequires:  db
 BuildRequires:  grep
@@ -81,20 +82,25 @@ The Python Programming Language.
 %patch1 -p1
 # make the code not block on getrandom during boot
 %patch2 -p1
+%patch3 -p1
 
 %build
 export LANG=C
 
-%configure %python_configure_flags --enable-shared
-make %{?_smp_mflags}
+# Build with PGO for perf improvement
+%configure %python_configure_flags
+make profile-opt %{?_smp_mflags}
 
 %install
+%make_install
+make clean
+%configure %python_configure_flags --enable-shared
+make %{?_smp_mflags}
 %make_install
 mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 
 %check
 export LANG=C
-
 LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid || :
 
 
