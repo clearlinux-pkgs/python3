@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.5.2
-Release:        34
+Release:        35
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
