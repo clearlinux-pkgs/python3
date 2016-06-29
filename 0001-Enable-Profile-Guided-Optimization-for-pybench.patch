@@ -1,0 +1,37 @@
+From e1ca0d8ff8f8c3cab372c6e280f8222d05500384 Mon Sep 17 00:00:00 2001
+From: Victor Rodriguez <victor.rodriguez.bahena@intel.com>
+Date: Wed, 29 Jun 2016 13:02:52 -0500
+Subject: [PATCH] Enable Profile Guided Optimization for pybench
+
+Signed-off-by: Victor Rodriguez <victor.rodriguez.bahena@intel.com>
+---
+ Makefile.pre.in | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index 87528a0..717a89e 100644
+--- a/Makefile.pre.in
++++ b/Makefile.pre.in
+@@ -236,6 +236,8 @@ TCLTK_LIBS=	@TCLTK_LIBS@
+ # run in the instrumented training build or do not provide much value.
+ PROFILE_TASK=-m test.regrtest --pgo -x test_asyncore test_gdb test_multiprocessing_fork test_multiprocessing_forkserver test_multiprocessing_main_handling test_multiprocessing_spawn test_subprocess
+ 
++PROFILE_TASK_PYBENCH= $(srcdir)/Tools/pybench/pybench.py -n 2 --with-gc --with-syscheck
++
+ # report files for gcov / lcov coverage report
+ COVERAGE_INFO=	$(abs_builddir)/coverage.info
+ COVERAGE_REPORT=$(abs_builddir)/lcov-report
+@@ -509,8 +511,8 @@ build_all_generate_profile:
+ 
+ run_profile_task:
+ 	: # FIXME: can't run for a cross build
+-	$(LLVM_PROF_FILE) $(RUNSHARED) ./$(BUILDPYTHON) $(PROFILE_TASK) || true
+-
++	# $(LLVM_PROF_FILE) $(RUNSHARED) ./$(BUILDPYTHON) $(PROFILE_TASK) || true
++	$(LLVM_PROF_FILE) ./$(BUILDPYTHON) $(PROFILE_TASK_PYBENCH) || true
+ build_all_merge_profile:
+ 	$(LLVM_PROF_MERGER)
+ 
+-- 
+2.9.0
+
