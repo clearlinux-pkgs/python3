@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.0
-Release:        38
+Release:        39
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -51,6 +51,9 @@ Group:          devel/python
 Provides:       python3
 Provides:       python3-modules
 Provides:       /bin/python3
+
+# evil evil compatibility hack for bootstrap purposes
+Provides:       python(abi) = 3.5
 
 %description core
 The Python Programming Language.
