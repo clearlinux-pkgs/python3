@@ -1,0 +1,57 @@
+Create and use AVX2 optimized libraries on the right machines
+
+diff -purN Python-3.6.0.org/Lib/distutils/unixccompiler.py Python-3.6.0/Lib/distutils/unixccompiler.py
+--- Python-3.6.0.org/Lib/distutils/unixccompiler.py	2016-12-23 02:21:19.000000000 +0000
++++ Python-3.6.0/Lib/distutils/unixccompiler.py	2016-12-23 16:53:20.083800890 +0000
+@@ -116,6 +116,8 @@ class UnixCCompiler(CCompiler):
+         try:
+             self.spawn(compiler_so + cc_args + [src, '-o', obj] +
+                        extra_postargs)
++            self.spawn(compiler_so + cc_args+ ["-mavx2", "-O3"] + [src, '-o', obj + ".avx2"] +
++                       extra_postargs)                      
+         except DistutilsExecError as msg:
+             raise CompileError(msg)
+ 
+@@ -194,6 +196,15 @@ class UnixCCompiler(CCompiler):
+                     linker = _osx_support.compiler_fixup(linker, ld_args)
+ 
+                 self.spawn(linker + ld_args)
++                ld_args = ([obj + ".avx2" for obj in objects] + self.objects +
++                       lib_opts + ['-o', output_filename + ".avx2"])
++                if debug:
++                    ld_args[:0] = ['-g']
++                if extra_preargs:
++                    ld_args[:0] = extra_preargs
++                if extra_postargs:
++                    ld_args.extend(extra_postargs)
++                self.spawn(linker + ld_args)
+             except DistutilsExecError as msg:
+                 raise LinkError(msg)
+         else:
+diff -purN Python-3.6.0.org/Python/dynload_shlib.c Python-3.6.0/Python/dynload_shlib.c
+--- Python-3.6.0.org/Python/dynload_shlib.c	2016-12-23 02:21:22.000000000 +0000
++++ Python-3.6.0/Python/dynload_shlib.c	2016-12-23 16:51:09.852435316 +0000
+@@ -61,6 +61,7 @@ _PyImport_FindSharedFuncptr(const char *
+     char funcname[258];
+     char pathbuf[260];
+     int dlopenflags=0;
++    char *pathname2;
+ 
+     if (strchr(pathname, '/') == NULL) {
+         /* Prefix bare filename with "./" */
+@@ -92,6 +93,15 @@ _PyImport_FindSharedFuncptr(const char *
+ 
+     dlopenflags = PyThreadState_GET()->interp->dlopenflags;
+ 
++    pathname2 = malloc(strlen(pathname) + strlen(".avx2") + 1);
++    sprintf(pathname2, "%s%s", pathname, ".avx2");
++    
++    if (access(pathname2, R_OK) == 0 && __builtin_cpu_supports("avx2"))
++        handle = dlopen(pathname2, dlopenflags);
++    else
++        handle = dlopen(pathname, dlopenflags);
++    free(pathname2);
++    
+     handle = dlopen(pathname, dlopenflags);
+ 
+     if (handle == NULL) {

@@ -1,17 +1,18 @@
 Name:           python3
-Version:        3.5.2
+Version:        3.6.0
 Release:        38
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tar.xz
+Source0:        https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz
 Patch0:         0001-Fix-python-path-for-linux.patch
 # Causes test-suite failures
 #Patch1:         0001-ensure-pip-upgrade.patch
 Patch1:         skip-some-tests.patch
 Patch2:         0001-Replace-getrandom-syscall-with-RDRAND-instruction.patch
 Patch3:         0001-Enable-Profile-Guided-Optimization-for-pybench.patch
+Patch4:		avx2.patch
 BuildRequires:  bzip2
 BuildRequires:  db
 BuildRequires:  grep
@@ -61,7 +62,7 @@ Group:          devel
 Requires:       python3-lib
 Requires:       python3-core
 
-%define python_configure_flags  --with-threads --with-pymalloc  --with-ensurepip=upgrade --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat
+%define python_configure_flags  --with-threads --with-pymalloc  --with-ensurepip=upgrade --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto --with-computed-gotos
 
 
 %description dev
@@ -81,8 +82,9 @@ The Python Programming Language.
 # Todo fix these
 %patch1 -p1
 # make the code not block on getrandom during boot
-%patch2 -p1
+#%patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 export LANG=C
@@ -105,36 +107,35 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 
 
 %files lib
-/usr/lib64/libpython3.5m.so.1.0
+/usr/lib64/libpython3.6m.so.1.0
 
 %files core
-%exclude %{_bindir}/2to3
-%{_bindir}/2to3-3.5
-%{_bindir}/easy_install-3.5
-%{_bindir}/idle3
-%{_bindir}/idle3.5
-%{_bindir}/pip3
-%{_bindir}/pip3.5
-%{_bindir}/pydoc3
-%{_bindir}/pydoc3.5
-%{_bindir}/python3
-%{_bindir}/python3-config
-%{_bindir}/python3.5
-%{_bindir}/python3.5-config
-%{_bindir}/python3.5m
-%{_bindir}/python3.5m-config
-%{_bindir}/pyvenv
-%{_bindir}/pyvenv-3.5
-/usr/lib/python3.5/
+%exclude /usr/bin/2to3
+/usr/bin/2to3-3.6
+/usr/bin/easy_install-3.6
+/usr/bin/idle3
+/usr/bin/idle3.6
+/usr/bin/pip3
+/usr/bin/pip3.6
+/usr/bin/pydoc3
+/usr/bin/pydoc3.6
+/usr/bin/python3
+/usr/bin/python3-config
+/usr/bin/python3.6
+/usr/bin/python3.6-config
+/usr/bin/python3.6m
+/usr/bin/python3.6m-config
+/usr/bin/pyvenv
+/usr/bin/pyvenv-3.6
+/usr/lib/python3.6/
 
 %files dev
-%{_includedir}/python3.5m/*.h
+/usr/include/python3.6m/*.h
 /usr/lib64/libpython3.so
-/usr/lib64/libpython3.5m.so
+/usr/lib64/libpython3.6m.so
 /usr/lib64/pkgconfig/python3.pc
-/usr/lib64/pkgconfig/python-3.5.pc
-/usr/lib64/pkgconfig/python-3.5m.pc
+/usr/lib64/pkgconfig/python-3.6.pc
+/usr/lib64/pkgconfig/python-3.6m.pc
 
 %files doc
-%{_mandir}/man1/python3.5.1
-%{_mandir}/man1/python3.1
+%{_mandir}/man1/*
