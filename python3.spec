@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.0
-Release:        39
+Release:        40
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -65,7 +65,7 @@ Group:          devel
 Requires:       python3-lib
 Requires:       python3-core
 
-%define python_configure_flags  --with-threads --with-pymalloc  --with-ensurepip=upgrade --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto --with-computed-gotos
+%define python_configure_flags  --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto --with-computed-gotos
 
 
 %description dev
@@ -118,8 +118,8 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 /usr/bin/easy_install-3.6
 /usr/bin/idle3
 /usr/bin/idle3.6
-/usr/bin/pip3
-/usr/bin/pip3.6
+%exclude /usr/bin/pip3
+%exclude /usr/bin/pip3.6
 /usr/bin/pydoc3
 /usr/bin/pydoc3.6
 /usr/bin/python3
