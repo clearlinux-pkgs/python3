@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.0
-Release:        40
+Release:        41
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -131,6 +131,8 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 /usr/bin/pyvenv
 /usr/bin/pyvenv-3.6
 /usr/lib/python3.6/
+%exclude /usr/lib/python3.6/site-packages/pip
+
 
 %files dev
 /usr/include/python3.6m/*.h
