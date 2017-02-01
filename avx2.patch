@@ -52,6 +52,7 @@ diff -purN Python-3.6.0.org/Python/dynload_shlib.c Python-3.6.0/Python/dynload_s
 +        handle = dlopen(pathname, dlopenflags);
 +    free(pathname2);
 +    
-     handle = dlopen(pathname, dlopenflags);
+-    handle = dlopen(pathname, dlopenflags);
++   /* handle = dlopen(pathname, dlopenflags); */
  
      if (handle == NULL) {
