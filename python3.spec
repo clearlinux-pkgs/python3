@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.0
-Release:        42
+Release:        43
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -13,6 +13,7 @@ Patch1:         skip-some-tests.patch
 Patch2:         0001-Replace-getrandom-syscall-with-RDRAND-instruction.patch
 Patch3:         0001-Enable-Profile-Guided-Optimization-for-pybench.patch
 Patch4:		avx2.patch
+Patch5:		noentropy.patch
 BuildRequires:  bzip2
 BuildRequires:  db
 BuildRequires:  grep
@@ -88,6 +89,7 @@ The Python Programming Language.
 #%patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 export LANG=C

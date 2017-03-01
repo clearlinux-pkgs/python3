@@ -1,8 +1,6 @@
-Create and use AVX2 optimized libraries on the right machines
-
 diff -purN Python-3.6.0.org/Lib/distutils/unixccompiler.py Python-3.6.0/Lib/distutils/unixccompiler.py
 --- Python-3.6.0.org/Lib/distutils/unixccompiler.py	2016-12-23 02:21:19.000000000 +0000
-+++ Python-3.6.0/Lib/distutils/unixccompiler.py	2016-12-23 16:53:20.083800890 +0000
++++ Python-3.6.0/Lib/distutils/unixccompiler.py	2017-03-01 22:41:59.399183691 +0000
 @@ -116,6 +116,8 @@ class UnixCCompiler(CCompiler):
          try:
              self.spawn(compiler_so + cc_args + [src, '-o', obj] +
@@ -30,29 +28,35 @@ diff -purN Python-3.6.0.org/Lib/distutils/unixccompiler.py Python-3.6.0/Lib/dist
          else:
 diff -purN Python-3.6.0.org/Python/dynload_shlib.c Python-3.6.0/Python/dynload_shlib.c
 --- Python-3.6.0.org/Python/dynload_shlib.c	2016-12-23 02:21:22.000000000 +0000
-+++ Python-3.6.0/Python/dynload_shlib.c	2016-12-23 16:51:09.852435316 +0000
-@@ -61,6 +61,7 @@ _PyImport_FindSharedFuncptr(const char *
++++ Python-3.6.0/Python/dynload_shlib.c	2017-03-01 22:44:54.848019227 +0000
+@@ -61,6 +61,8 @@ _PyImport_FindSharedFuncptr(const char *
      char funcname[258];
      char pathbuf[260];
      int dlopenflags=0;
 +    char *pathname2;
++    char *pathname3;
  
      if (strchr(pathname, '/') == NULL) {
          /* Prefix bare filename with "./" */
-@@ -92,6 +93,15 @@ _PyImport_FindSharedFuncptr(const char *
+@@ -92,7 +94,20 @@ _PyImport_FindSharedFuncptr(const char *
  
      dlopenflags = PyThreadState_GET()->interp->dlopenflags;
  
+-    handle = dlopen(pathname, dlopenflags);
 +    pathname2 = malloc(strlen(pathname) + strlen(".avx2") + 1);
 +    sprintf(pathname2, "%s%s", pathname, ".avx2");
++    pathname3 = malloc(strlen(pathname) + strlen(".avx512") + 1);
++    sprintf(pathname3, "%s%s", pathname, ".avx512");
 +    
-+    if (access(pathname2, R_OK) == 0 && __builtin_cpu_supports("avx2"))
++    if (access(pathname3, R_OK) == 0 && __builtin_cpu_supports("avx512cd"))
++        handle = dlopen(pathname3, dlopenflags);
++    else if (access(pathname2, R_OK) == 0 && __builtin_cpu_supports("avx2"))
 +        handle = dlopen(pathname2, dlopenflags);
 +    else
 +        handle = dlopen(pathname, dlopenflags);
 +    free(pathname2);
++    free(pathname3);
 +    
--    handle = dlopen(pathname, dlopenflags);
-+   /* handle = dlopen(pathname, dlopenflags); */
  
      if (handle == NULL) {
+         PyObject *mod_name;
