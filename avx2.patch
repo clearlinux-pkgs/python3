@@ -5,7 +5,7 @@ diff -purN Python-3.6.0.org/Lib/distutils/unixccompiler.py Python-3.6.0/Lib/dist
          try:
              self.spawn(compiler_so + cc_args + [src, '-o', obj] +
                         extra_postargs)
-+            self.spawn(compiler_so + cc_args+ ["-mavx2", "-O3"] + [src, '-o', obj + ".avx2"] +
++            self.spawn(compiler_so + cc_args+ ["-march=haswell", "-O3"] + [src, '-o', obj + ".avx2"] +
 +                       extra_postargs)                      
          except DistutilsExecError as msg:
              raise CompileError(msg)
