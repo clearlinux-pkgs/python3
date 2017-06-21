@@ -1,21 +1,32 @@
 diff -purN Python-3.6.0.org/Lib/distutils/unixccompiler.py Python-3.6.0/Lib/distutils/unixccompiler.py
 --- Python-3.6.0.org/Lib/distutils/unixccompiler.py	2016-12-23 02:21:19.000000000 +0000
 +++ Python-3.6.0/Lib/distutils/unixccompiler.py	2017-03-01 22:41:59.399183691 +0000
-@@ -116,6 +116,8 @@ class UnixCCompiler(CCompiler):
+@@ -116,6 +116,10 @@ class UnixCCompiler(CCompiler):
          try:
              self.spawn(compiler_so + cc_args + [src, '-o', obj] +
                         extra_postargs)
 +            self.spawn(compiler_so + cc_args+ ["-march=haswell", "-O3"] + [src, '-o', obj + ".avx2"] +
 +                       extra_postargs)                      
++            self.spawn(compiler_so + cc_args+ ["-march=skylake-avx512", "-O3"] + [src, '-o', obj + ".avx512"] +
++                       extra_postargs)                      
          except DistutilsExecError as msg:
              raise CompileError(msg)
  
-@@ -194,6 +196,15 @@ class UnixCCompiler(CCompiler):
+@@ -194,6 +196,24 @@ class UnixCCompiler(CCompiler):
                      linker = _osx_support.compiler_fixup(linker, ld_args)
  
                  self.spawn(linker + ld_args)
 +                ld_args = ([obj + ".avx2" for obj in objects] + self.objects +
 +                       lib_opts + ['-o', output_filename + ".avx2"])
++                if debug:
++                    ld_args[:0] = ['-g']
++                if extra_preargs:
++                    ld_args[:0] = extra_preargs
++                if extra_postargs:
++                    ld_args.extend(extra_postargs)
++                self.spawn(linker + ld_args)
++                ld_args = ([obj + ".avx512" for obj in objects] + self.objects +
++                       lib_opts + ['-o', output_filename + ".avx512"])
 +                if debug:
 +                    ld_args[:0] = ['-g']
 +                if extra_preargs:
