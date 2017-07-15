@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.1
-Release:        47
+Release:        48
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -14,6 +14,7 @@ Patch2:         0001-Replace-getrandom-syscall-with-RDRAND-instruction.patch
 Patch3:         0001-Enable-Profile-Guided-Optimization-for-pybench.patch
 Patch4:		avx2.patch
 Patch5:		noentropy.patch
+
 BuildRequires:  bzip2
 BuildRequires:  db
 BuildRequires:  grep
@@ -43,6 +44,14 @@ Summary:        The Python Programming Language
 Group:          devel/python
 
 %description lib
+The Python Programming Language.
+
+%package lib-avx2
+License:        Python-2.0
+Summary:        The Python Programming Language
+Group:          devel/python
+
+%description lib-avx2
 The Python Programming Language.
 
 %package core
@@ -91,18 +100,38 @@ The Python Programming Language.
 %patch4 -p1
 #%patch5 -p1
 
+pushd ..
+cp -a Python-%{version} Python-avx2
+cd Python-avx2
+popd
+
 %build
 export LANG=C
 
 # Build with PGO for perf improvement
-%configure %python_configure_flags
+export CFLAGS="$CFLAGS -flto=8"
+%configure %python_configure_flags --enable-shared
 make profile-opt %{?_smp_mflags}
 
-%install
-%make_install
-make clean
+pushd ../Python-avx2
+export CFLAGS="$CFLAGS -march=haswell"
+export CXXFLAGS="$CXXFLAGS -march=haswell"
+
 %configure %python_configure_flags --enable-shared
-make %{?_smp_mflags}
+make profile-opt %{?_smp_mflags}
+popd
+
+%install
+
+pushd ../Python-avx2
+%make_install
+mkdir -p %{buildroot}/usr/lib64/haswell
+mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
+rm -rf %{buildroot}/usr/lib/*
+rm -rf %{buildroot}/usr/bin/*
+popd
+
+
 %make_install
 mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 
@@ -113,6 +142,10 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 
 %files lib
 /usr/lib64/libpython3.6m.so.1.0
+
+%files lib-avx2
+
+/usr/lib64/haswell/libpython3.6m.so.1.0
 
 %files core
 %exclude /usr/bin/2to3
