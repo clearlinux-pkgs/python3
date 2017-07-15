@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.1
-Release:        48
+Release:        49
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -50,6 +50,7 @@ The Python Programming Language.
 License:        Python-2.0
 Summary:        The Python Programming Language
 Group:          devel/python
+Rquires: 	python3-lib
 
 %description lib-avx2
 The Python Programming Language.
@@ -144,8 +145,9 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 /usr/lib64/libpython3.6m.so.1.0
 
 %files lib-avx2
-
 /usr/lib64/haswell/libpython3.6m.so.1.0
+/usr/lib64/haswell/libpython3.6m.so
+/usr/lib64/haswell/libpython3.so
 
 %files core
 %exclude /usr/bin/2to3
