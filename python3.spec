@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.1
-Release:        49
+Release:        50
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -50,7 +50,7 @@ The Python Programming Language.
 License:        Python-2.0
 Summary:        The Python Programming Language
 Group:          devel/python
-Rquires: 	python3-lib
+Requires: 	python3-lib
 
 %description lib-avx2
 The Python Programming Language.
