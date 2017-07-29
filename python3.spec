@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.2
-Release:        54
+Release:        55
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -152,7 +152,7 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 %files core
 %exclude /usr/bin/2to3
 /usr/bin/2to3-3.6
-/usr/bin/easy_install-3.6
+%exclude /usr/bin/easy_install-3.6
 /usr/bin/idle3
 /usr/bin/idle3.6
 %exclude /usr/bin/pip3
