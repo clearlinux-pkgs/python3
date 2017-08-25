@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.2
-Release:        63
+Release:        64
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -27,6 +27,7 @@ BuildRequires:  openssl-dev
 BuildRequires:  sqlite-autoconf
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:  pkgconfig(zlib)
+BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  ncurses-dev
 BuildRequires:  expat-dev
 BuildRequires:  libffi-dev
