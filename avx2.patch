@@ -25,15 +25,15 @@ diff -purN Python-3.6.0.org/Lib/distutils/unixccompiler.py Python-3.6.0/Lib/dist
 +                if extra_postargs:
 +                    ld_args.extend(extra_postargs)
 +                self.spawn(linker + ld_args)
-+#                ld_args = ([obj + ".avx512" for obj in objects] + self.objects +
-+#                       lib_opts + ['-o', output_filename + ".avx512"])
-+#                if debug:
-+#                    ld_args[:0] = ['-g']
-+#                if extra_preargs:
-+#                    ld_args[:0] = extra_preargs
-+#                if extra_postargs:
-+#                    ld_args.extend(extra_postargs)
-+#                self.spawn(linker + ld_args)
++                ld_args = ([obj + ".avx512" for obj in objects] + self.objects +
++                       lib_opts + ['-o', output_filename + ".avx512"])
++                if debug:
++                    ld_args[:0] = ['-g']
++                if extra_preargs:
++                    ld_args[:0] = extra_preargs
++                if extra_postargs:
++                    ld_args.extend(extra_postargs)
++                self.spawn(linker + ld_args)
              except DistutilsExecError as msg:
                  raise LinkError(msg)
          else:

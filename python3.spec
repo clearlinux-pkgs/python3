@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.2
-Release:        68
+Release:        69
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -121,7 +121,7 @@ pushd ../Python-avx2
 export CFLAGS="$CFLAGS -march=haswell"
 export CXXFLAGS="$CXXFLAGS -march=haswell"
 
-%configure %python_configure_flags --enable-shared
+%configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
 make profile-opt %{?_smp_mflags}
 popd
 
@@ -132,7 +132,7 @@ pushd ../Python-avx2
 mkdir -p %{buildroot}/usr/lib64/haswell
 mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
 rm -rf %{buildroot}/usr/lib/*
-rm -rf %{buildroot}/usr/bin/*
+rm -f %{buildroot}/usr/bin/*
 popd
 
 
