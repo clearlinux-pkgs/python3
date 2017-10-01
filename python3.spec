@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.2
-Release:        75
+Release:        76
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -66,7 +66,6 @@ Provides:       /bin/python3
 
 Requires:  	setuptools-python3
 Requires:  	setuptools-bin
-Requires:	usrbinpython
 
 
 # evil evil compatibility hack for bootstrap purposes
