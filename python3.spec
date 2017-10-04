@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.6.2
+Version:        3.6.3
 Release:        76
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tar.xz
+Source0:        https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
 Patch0:         0001-Fix-python-path-for-linux.patch
 # Causes test-suite failures
 #Patch1:         0001-ensure-pip-upgrade.patch
@@ -115,7 +115,7 @@ popd
 export LANG=C
 
 # Build with PGO for perf improvement
-export CFLAGS="$CFLAGS -flto=8"
+export CFLAGS="$CFLAGS -flto=8 -O3"
 %configure %python_configure_flags --enable-shared
 make profile-opt %{?_smp_mflags}
 
@@ -143,7 +143,7 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 
 %check
 export LANG=C
-LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid || :
+LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
 
 %files lib
