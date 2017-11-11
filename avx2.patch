@@ -59,9 +59,9 @@ diff -purN Python-3.6.0.org/Python/dynload_shlib.c Python-3.6.0/Python/dynload_s
 +    pathname3 = malloc(strlen(pathname) + strlen(".avx512") + 1);
 +    sprintf(pathname3, "%s%s", pathname, ".avx512");
 +    
-+    if (access(pathname3, R_OK) == 0 && __builtin_cpu_supports("avx512dq"))
++    if (__builtin_cpu_supports("avx512dq") && access(pathname3, R_OK) == 0)
 +        handle = dlopen(pathname3, dlopenflags);
-+    else if (access(pathname2, R_OK) == 0 && __builtin_cpu_supports("avx2"))
++    else if (__builtin_cpu_supports("avx2") && access(pathname2, R_OK) == 0)
 +        handle = dlopen(pathname2, dlopenflags);
 +    else
 +        handle = dlopen(pathname, dlopenflags);
