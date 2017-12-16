@@ -9,3 +9,14 @@
  
      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -Wextra" >&5
  $as_echo_n "checking for -Wextra... " >&6; }
+--- Python-3.6.3/Makefile.pre.in~	2017-10-04 14:23:03.000000000 +0000
++++ Python-3.6.3/Makefile.pre.in	2017-12-16 18:43:33.696902331 +0000
+@@ -560,6 +560,8 @@
+ # This is shared by the math and cmath modules
+ Modules/_math.o: Modules/_math.c Modules/_math.h
+ 	$(CC) -c $(CCSHARED) $(PY_CORE_CFLAGS) -o $@ $<
++	$(CC) -c $(CCSHARED) $(PY_CORE_CFLAGS) -march=haswell -o $@.avx2 $<
++	$(CC) -c $(CCSHARED) $(PY_CORE_CFLAGS) -march=skylake-avx512 -o $@.avx512 $<
+ 
+ # blake2s is auto-generated from blake2b
+ $(srcdir)/Modules/_blake2/blake2s_impl.c: $(BUILDPYTHON) $(srcdir)/Modules/_blake2/blake2b_impl.c $(srcdir)/Modules/_blake2/blake2b2s.py
