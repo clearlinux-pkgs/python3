@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.3
-Release:        81
+Release:        82
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -14,6 +14,7 @@ Patch2:         0001-Replace-getrandom-syscall-with-RDRAND-instruction.patch
 Patch3:         0001-Enable-Profile-Guided-Optimization-for-pybench.patch
 Patch4:		avx2.patch
 Patch5:		noentropy.patch
+Patch6:		noc99.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -105,6 +106,7 @@ The Python Programming Language.
 %patch3 -p1
 %patch4 -p1
 #%patch5 -p1
+%patch6 -p1
 
 pushd ..
 cp -a Python-%{version} Python-avx2
@@ -115,13 +117,13 @@ popd
 export LANG=C
 
 # Build with PGO for perf improvement
-export CFLAGS="$CFLAGS -flto=8 -O3"
+export CFLAGS="$CFLAGS -O3"
 %configure %python_configure_flags --enable-shared
 make profile-opt %{?_smp_mflags}
 
 pushd ../Python-avx2
-export CFLAGS="$CFLAGS -march=haswell"
-export CXXFLAGS="$CXXFLAGS -march=haswell"
+export CFLAGS="$CFLAGS -march=haswell -mfma  "
+export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
 
 %configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
 make profile-opt %{?_smp_mflags}
