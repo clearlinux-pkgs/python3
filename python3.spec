@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.6.3
+Version:        3.6.4
 Release:        83
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
+Source0:        https://www.python.org/ftp/python/3.6.4/Python-3.6.4.tar.xz
 Patch0:         0001-Fix-python-path-for-linux.patch
 # Causes test-suite failures
 #Patch1:         0001-ensure-pip-upgrade.patch
