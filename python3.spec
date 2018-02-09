@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.4
-Release:        124
+Release:        125
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -34,6 +34,11 @@ BuildRequires:  expat-dev
 BuildRequires:  libffi-dev
 BuildRequires:  procps-ng-bin
 BuildRequires:  netbase
+Requires: python3-core
+Requires: python3-lib
+Requires: python3-lib-avx2
+Requires: usrbinpython
+
 
 %global __arch_install_post %{nil}
 
@@ -147,6 +152,8 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 export LANG=C
 LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
+
+%files
 
 %files lib
 /usr/lib64/libpython3.6m.so.1.0
