@@ -11,7 +11,7 @@ Patch0:         0001-Fix-python-path-for-linux.patch
 #Patch1:         0001-ensure-pip-upgrade.patch
 Patch1:         skip-some-tests.patch
 Patch2:         0001-Replace-getrandom-syscall-with-RDRAND-instruction.patch
-Patch3:         0001-Enable-Profile-Guided-Optimization-for-pybench.patch
+Patch3:         pgo_profile_pybench.patch
 Patch4:		avx2.patch
 Patch5:		noentropy.patch
 Patch6:		noc99.patch
@@ -124,14 +124,14 @@ export LANG=C
 # Build with PGO for perf improvement
 export CFLAGS="$CFLAGS -O3"
 %configure %python_configure_flags --enable-shared
-make profile-opt %{?_smp_mflags}
+make %{?_smp_mflags}
 
 pushd ../Python-avx2
 export CFLAGS="$CFLAGS -march=haswell -mfma  "
 export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
 
 %configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
-make profile-opt %{?_smp_mflags}
+make %{?_smp_mflags}
 popd
 
 %install
@@ -147,6 +147,21 @@ popd
 
 %make_install
 mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
+
+# --enable-optimizations does not work with --enable-shared
+# https://bugs.python.org/issue29712
+pushd ../Python-avx2
+make clean
+%configure %python_configure_flags --enable-optimizations
+make profile-opt %{?_smp_mflags}
+./python Tools/pybench/pybench.py -n 20
+popd
+
+make clean
+%configure %python_configure_flags --enable-optimizations
+make profile-opt %{?_smp_mflags}
+./python Tools/pybench/pybench.py -n 20
+%make_install
 
 %check
 export LANG=C
