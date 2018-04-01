@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.5
-Release:        127
+Release:        128
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -86,6 +86,7 @@ Summary:        The Python Programming Language
 Group:          devel
 Requires:       python3-lib
 Requires:       python3-core
+Requires:	usrbinpython
 
 %define python_configure_flags  --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto=8 --with-computed-gotos
 
