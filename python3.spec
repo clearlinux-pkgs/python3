@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.6.5
-Release:        131
+Release:        132
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -177,7 +177,7 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 %files lib-avx2
 /usr/lib64/haswell/libpython3.6m.so.1.0
 /usr/lib64/haswell/libpython3.6m.so
-/usr/lib64/haswell/libpython3.so
+#/usr/lib64/haswell/libpython3.so
 
 %files core
 %exclude /usr/bin/2to3
