@@ -1,20 +1,17 @@
 Name:           python3
-Version:        3.6.5
-Release:        136
+Version:        3.7.0
+Release:        137
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tar.xz
-Patch0:         0001-Fix-python-path-for-linux.patch
-# Causes test-suite failures
-#Patch1:         0001-ensure-pip-upgrade.patch
-Patch1:         skip-some-tests.patch
-Patch2:         0001-Replace-getrandom-syscall-with-RDRAND-instruction.patch
-Patch3:         pgo_profile_pybench.patch
-Patch4:		avx2.patch
-Patch5:		noentropy.patch
-Patch6:		noc99.patch
+Source0:        https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tar.xz
+Patch1:         0001-Fix-python-path-for-linux.patch
+Patch2:         0002-Skip-tests-TODO-fix-skips.patch
+Patch3:         0003-Use-pybench-to-optimize-python.patch
+Patch4:         0004-Add-avx2-and-avx512-support.patch
+Patch5:         0005-Build-avx2-and-avx512-versions-of-the-math-library.patch
+Patch6:         0001-Add-pybench-for-pgo-optimization.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -75,7 +72,7 @@ Requires:  	setuptools-bin
 
 
 # evil evil compatibility hack for bootstrap purposes
-Provides:       python(abi) = 3.5
+Provides:       python(abi) = 3.6
 
 %description core
 The Python Programming Language.
@@ -104,14 +101,11 @@ The Python Programming Language.
 
 %prep
 %setup -q -n Python-%{version}
-%patch0 -p1
-# Todo fix these
 %patch1 -p1
-# make the code not block on getrandom during boot
-#%patch2 -p1
+%patch2 -p1
 %patch3 -p1
 %patch4 -p1
-#%patch5 -p1
+%patch5 -p1
 %patch6 -p1
 
 pushd ..
@@ -172,49 +166,48 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 %files
 
 %files lib
-/usr/lib64/libpython3.6m.so.1.0
+/usr/lib64/libpython3.7m.so.1.0
 
 %files lib-avx2
-/usr/lib64/haswell/libpython3.6m.so.1.0
-/usr/lib64/haswell/libpython3.6m.so
-#/usr/lib64/haswell/libpython3.so
+/usr/lib64/haswell/libpython3.7m.so.1.0
 
 %files core
 %exclude /usr/bin/2to3
-/usr/bin/2to3-3.6
-%exclude /usr/bin/easy_install-3.6
+/usr/bin/2to3-3.7
+#%exclude /usr/bin/easy_install-3.7
+/usr/bin/easy_install-3.7
 /usr/bin/idle3
-/usr/bin/idle3.6
-%exclude /usr/bin/pip3
-%exclude /usr/bin/pip3.6
+/usr/bin/idle3.7
 /usr/bin/pydoc3
-/usr/bin/pydoc3.6
+/usr/bin/pydoc3.7
 /usr/bin/python3
 /usr/bin/python3-config
-/usr/bin/python3.6
-/usr/bin/python3.6-config
-/usr/bin/python3.6m
-/usr/bin/python3.6m-config
+/usr/bin/python3.7
+/usr/bin/python3.7-config
+/usr/bin/python3.7m
+/usr/bin/python3.7m-config
 /usr/bin/pyvenv
-/usr/bin/pyvenv-3.6
-/usr/lib/python3.6/
-%exclude /usr/lib/python3.6/site-packages/pip
-%exclude /usr/lib/python3.6/site-packages/setuptools-28.8.0.dist-info
-%exclude /usr/lib/python3.6/site-packages/setuptools
-%exclude /usr/lib/python3.6/ensurepip/_bundled/setuptools-28.8.0-py2.py3-none-any.whl
-%exclude /usr/lib/python3.6/site-packages/pkg_resources
-%exclude /usr/lib/python3.6/site-packages/easy_install.py
-
-
-
+/usr/bin/pyvenv-3.7
+/usr/lib/python3.7
+#%exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
+/usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
+#%exclude /usr/lib/python3.7/site-packages/setuptools
+/usr/lib/python3.7/site-packages/setuptools
+#%exclude /usr/lib/python3.7/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
+/usr/lib/python3.7/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
+#%exclude /usr/lib/python3.7/site-packages/pkg_resources
+/usr/lib/python3.7/site-packages/pkg_resources
+#%exclude /usr/lib/python3.7/site-packages/easy_install.py
+/usr/lib/python3.7/site-packages/easy_install.py
 
 %files dev
-/usr/include/python3.6m/*.h
+/usr/include/python3.7m/*.h
+/usr/lib64/haswell/libpython3.7m.so
+/usr/lib64/libpython3.7m.so
 /usr/lib64/libpython3.so
-/usr/lib64/libpython3.6m.so
+/usr/lib64/pkgconfig/python-3.7.pc
+/usr/lib64/pkgconfig/python-3.7m.pc
 /usr/lib64/pkgconfig/python3.pc
-/usr/lib64/pkgconfig/python-3.6.pc
-/usr/lib64/pkgconfig/python-3.6m.pc
 
 %files doc
 %{_mandir}/man1/*
