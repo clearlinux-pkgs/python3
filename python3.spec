@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.0
-Release:        140
+Release:        141
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -174,8 +174,7 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 %files core
 %exclude /usr/bin/2to3
 /usr/bin/2to3-3.7
-#exclude /usr/bin/easy_install-3.7
-/usr/bin/easy_install-3.7
+%exclude /usr/bin/easy_install-3.7
 /usr/bin/idle3
 /usr/bin/idle3.7
 %exclude /usr/bin/pip3
@@ -191,10 +190,10 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 /usr/bin/pyvenv
 /usr/bin/pyvenv-3.7
 /usr/lib/python3.7
-#exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
-#exclude /usr/lib/python3.7/site-packages/setuptools
-#exclude /usr/lib/python3.7/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
-#exclude /usr/lib/python3.7/site-packages/pkg_resources
+%exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
+%exclude /usr/lib/python3.7/site-packages/setuptools
+%exclude /usr/lib/python3.7/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
+%exclude /usr/lib/python3.7/site-packages/pkg_resources
 
 %files dev
 /usr/include/python3.7m/*.h
