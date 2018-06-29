@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.0
-Release:        139
+Release:        140
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -178,8 +178,8 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 /usr/bin/easy_install-3.7
 /usr/bin/idle3
 /usr/bin/idle3.7
-#exclude /usr/bin/pip3
-#exclude /usr/bin/pip3.7
+%exclude /usr/bin/pip3
+%exclude /usr/bin/pip3.7
 /usr/bin/pydoc3
 /usr/bin/pydoc3.7
 /usr/bin/python3
