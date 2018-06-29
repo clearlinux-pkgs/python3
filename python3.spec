@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.0
-Release:        137
+Release:        138
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -108,10 +108,10 @@ The Python Programming Language.
 %patch5 -p1
 %patch6 -p1
 
-pushd ..
-cp -a Python-%{version} Python-avx2
-cd Python-avx2
-popd
+# pushd ..
+# cp -a Python-%{version} Python-avx2
+# cd Python-avx2
+# popd
 
 %build
 export LANG=C
@@ -121,23 +121,23 @@ export CFLAGS="$CFLAGS -O3"
 %configure %python_configure_flags --enable-shared
 make %{?_smp_mflags}
 
-pushd ../Python-avx2
-export CFLAGS="$CFLAGS -march=haswell -mfma  "
-export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
+# pushd ../Python-avx2
+# export CFLAGS="$CFLAGS -march=haswell -mfma  "
+# export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
 
-%configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
-make %{?_smp_mflags}
-popd
+# %configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
+# make %{?_smp_mflags}
+# popd
 
 %install
 
-pushd ../Python-avx2
-%make_install
-mkdir -p %{buildroot}/usr/lib64/haswell
-mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
-rm -rf %{buildroot}/usr/lib/*
-rm -rf %{buildroot}/usr/bin/*
-popd
+# pushd ../Python-avx2
+# %make_install
+# mkdir -p %{buildroot}/usr/lib64/haswell
+# mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
+# rm -rf %{buildroot}/usr/lib/*
+# rm -rf %{buildroot}/usr/bin/*
+# popd
 
 
 %make_install
@@ -145,22 +145,22 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 
 # --enable-optimizations does not work with --enable-shared
 # https://bugs.python.org/issue29712
-pushd ../Python-avx2
-make clean
-%configure %python_configure_flags --enable-optimizations
-make profile-opt %{?_smp_mflags}
-./python Tools/pybench/pybench.py -n 20
-popd
+# pushd ../Python-avx2
+# make clean
+# %configure %python_configure_flags --enable-optimizations
+# make profile-opt %{?_smp_mflags}
+# ./python Tools/pybench/pybench.py -n 20
+# popd
 
-make clean
-%configure %python_configure_flags --enable-optimizations
-make profile-opt %{?_smp_mflags}
-./python Tools/pybench/pybench.py -n 20
+# make clean
+# %configure %python_configure_flags --enable-optimizations
+# make profile-opt %{?_smp_mflags}
+# ./python Tools/pybench/pybench.py -n 20
 %make_install
 
-%check
-export LANG=C
-LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
+# %check
+# export LANG=C
+# LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
 
 %files
@@ -169,7 +169,7 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 /usr/lib64/libpython3.7m.so.1.0
 
 %files lib-avx2
-/usr/lib64/haswell/libpython3.7m.so.1.0
+#/usr/lib64/haswell/libpython3.7m.so.1.0
 
 %files core
 %exclude /usr/bin/2to3
@@ -178,6 +178,10 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 /usr/bin/easy_install-3.7
 /usr/bin/idle3
 /usr/bin/idle3.7
+%exclude /usr/bin/pip3
+/usr/bin/pip3
+%exclude /usr/bin/pip3.7
+/usr/bin/pip3.7
 /usr/bin/pydoc3
 /usr/bin/pydoc3.7
 /usr/bin/python3
@@ -190,19 +194,14 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 /usr/bin/pyvenv-3.7
 /usr/lib/python3.7
 #%exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
-/usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
 #%exclude /usr/lib/python3.7/site-packages/setuptools
-/usr/lib/python3.7/site-packages/setuptools
 #%exclude /usr/lib/python3.7/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
-/usr/lib/python3.7/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
 #%exclude /usr/lib/python3.7/site-packages/pkg_resources
-/usr/lib/python3.7/site-packages/pkg_resources
 #%exclude /usr/lib/python3.7/site-packages/easy_install.py
-/usr/lib/python3.7/site-packages/easy_install.py
 
 %files dev
 /usr/include/python3.7m/*.h
-/usr/lib64/haswell/libpython3.7m.so
+#/usr/lib64/haswell/libpython3.7m.so
 /usr/lib64/libpython3.7m.so
 /usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.7.pc
