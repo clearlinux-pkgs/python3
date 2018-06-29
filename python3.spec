@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.0
-Release:        138
+Release:        139
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -125,14 +125,14 @@ make %{?_smp_mflags}
 # export CFLAGS="$CFLAGS -march=haswell -mfma  "
 # export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
 
-# %configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
+# configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
 # make %{?_smp_mflags}
 # popd
 
 %install
 
 # pushd ../Python-avx2
-# %make_install
+# make_install
 # mkdir -p %{buildroot}/usr/lib64/haswell
 # mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
 # rm -rf %{buildroot}/usr/lib/*
@@ -147,18 +147,18 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 # https://bugs.python.org/issue29712
 # pushd ../Python-avx2
 # make clean
-# %configure %python_configure_flags --enable-optimizations
+# configure %python_configure_flags --enable-optimizations
 # make profile-opt %{?_smp_mflags}
 # ./python Tools/pybench/pybench.py -n 20
 # popd
 
 # make clean
-# %configure %python_configure_flags --enable-optimizations
+# configure %python_configure_flags --enable-optimizations
 # make profile-opt %{?_smp_mflags}
 # ./python Tools/pybench/pybench.py -n 20
-%make_install
+#make_install
 
-# %check
+# check
 # export LANG=C
 # LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
@@ -174,14 +174,12 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 %files core
 %exclude /usr/bin/2to3
 /usr/bin/2to3-3.7
-#%exclude /usr/bin/easy_install-3.7
+#exclude /usr/bin/easy_install-3.7
 /usr/bin/easy_install-3.7
 /usr/bin/idle3
 /usr/bin/idle3.7
-%exclude /usr/bin/pip3
-/usr/bin/pip3
-%exclude /usr/bin/pip3.7
-/usr/bin/pip3.7
+#exclude /usr/bin/pip3
+#exclude /usr/bin/pip3.7
 /usr/bin/pydoc3
 /usr/bin/pydoc3.7
 /usr/bin/python3
@@ -193,11 +191,10 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 /usr/bin/pyvenv
 /usr/bin/pyvenv-3.7
 /usr/lib/python3.7
-#%exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
-#%exclude /usr/lib/python3.7/site-packages/setuptools
-#%exclude /usr/lib/python3.7/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
-#%exclude /usr/lib/python3.7/site-packages/pkg_resources
-#%exclude /usr/lib/python3.7/site-packages/easy_install.py
+#exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
+#exclude /usr/lib/python3.7/site-packages/setuptools
+#exclude /usr/lib/python3.7/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
+#exclude /usr/lib/python3.7/site-packages/pkg_resources
 
 %files dev
 /usr/include/python3.7m/*.h
