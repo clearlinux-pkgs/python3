@@ -1,0 +1,40 @@
+--- Python-3.7.0/Lib/py_compile.py~	2018-06-27 03:07:35.000000000 +0000
++++ Python-3.7.0/Lib/py_compile.py	2018-06-30 03:41:47.129439150 +0000
+@@ -70,7 +70,7 @@
+ 
+ 
+ def compile(file, cfile=None, dfile=None, doraise=False, optimize=-1,
+-            invalidation_mode=PycInvalidationMode.TIMESTAMP):
++            invalidation_mode=PycInvalidationMode.CHECKED_HASH):
+     """Byte-compile one Python source file to Python bytecode.
+ 
+     :param file: The source file name.
+--- Python-3.7.0/Lib/compileall.py~	2018-06-27 03:07:35.000000000 +0000
++++ Python-3.7.0/Lib/compileall.py	2018-06-30 03:43:16.564437904 +0000
+@@ -53,7 +53,7 @@
+ 
+ def compile_dir(dir, maxlevels=10, ddir=None, force=False, rx=None,
+                 quiet=0, legacy=False, optimize=-1, workers=1,
+-                invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP):
++                invalidation_mode=py_compile.PycInvalidationMode.CHECKED_HASH):
+     """Byte-compile all modules in the given directory tree.
+ 
+     Arguments (only dir is required):
+@@ -96,7 +96,7 @@
+ 
+ def compile_file(fullname, ddir=None, force=False, rx=None, quiet=0,
+                  legacy=False, optimize=-1,
+-                 invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP):
++                 invalidation_mode=py_compile.PycInvalidationMode.CHECKED_HASH):
+     """Byte-compile one file.
+ 
+     Arguments (only fullname is required):
+@@ -182,7 +182,7 @@
+ 
+ def compile_path(skip_curdir=1, maxlevels=0, force=False, quiet=0,
+                  legacy=False, optimize=-1,
+-                 invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP):
++                 invalidation_mode=py_compile.PycInvalidationMode.CHECKED_HASH):
+     """Byte-compile all module on sys.path.
+ 
+     Arguments (all optional):

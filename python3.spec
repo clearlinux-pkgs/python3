@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.0
-Release:        141
+Release:        142
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -12,6 +12,7 @@ Patch3:         0003-Use-pybench-to-optimize-python.patch
 Patch4:         0004-Add-avx2-and-avx512-support.patch
 Patch5:         0005-Build-avx2-and-avx512-versions-of-the-math-library.patch
 Patch6:         0001-Add-pybench-for-pgo-optimization.patch
+Patch7:		hashcompile.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -107,6 +108,7 @@ The Python Programming Language.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 # pushd ..
 # cp -a Python-%{version} Python-avx2
