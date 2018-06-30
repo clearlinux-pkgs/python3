@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.0
-Release:        143
+Release:        144
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -196,9 +196,7 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 %exclude /usr/lib/python3.7/site-packages/setuptools
 %exclude /usr/lib/python3.7/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
 %exclude /usr/lib/python3.7/site-packages/pkg_resources
-
-%exclude /usr/lib/python3.7/site-packages/pip/_internal/__pycache__/
-%exclude /usr/lib/python3.7/site-packages/pip/_internal/req/__pycache__/
+%exclude /usr/lib/python3.7/site-packages/pip/_internal/
 
 %files dev
 /usr/include/python3.7m/*.h
