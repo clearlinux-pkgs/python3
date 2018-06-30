@@ -197,6 +197,9 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 %exclude /usr/lib/python3.7/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
 %exclude /usr/lib/python3.7/site-packages/pkg_resources
 
+%exclude /usr/lib/python3.7/site-packages/pip/_internal/__pycache__/
+%exclude /usr/lib/python3.7/site-packages/pip/_internal/req/__pycache__/
+
 %files dev
 /usr/include/python3.7m/*.h
 #/usr/lib64/haswell/libpython3.7m.so
