@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.0
-Release:        148
+Release:        149
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -105,10 +105,10 @@ The Python Programming Language.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
+#patch4 -p1
+#patch5 -p1
 %patch6 -p1
-#%patch7 -p1
+#patch7 -p1
 
 # pushd ..
 # cp -a Python-%{version} Python-avx2
@@ -194,7 +194,6 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 /usr/lib/python3.7
 %exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
 %exclude /usr/lib/python3.7/site-packages/setuptools
-%exclude /usr/lib/python3.7/ensurepip/
 %exclude /usr/lib/python3.7/site-packages/pkg_resources
 %exclude /usr/lib/python3.7/site-packages/pip
 %exclude /usr/lib/python3.7/site-packages/pip-10.0.1.dist-info
