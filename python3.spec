@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.0
-Release:        149
+Release:        150
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -105,15 +105,15 @@ The Python Programming Language.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-#patch4 -p1
-#patch5 -p1
-%patch6 -p1
-#patch7 -p1
+%patch4 -p1
+%patch5 -p1
+# patch6 -p1
+# patch7 -p1
 
-# pushd ..
-# cp -a Python-%{version} Python-avx2
-# cd Python-avx2
-# popd
+pushd ..
+cp -a Python-%{version} Python-avx2
+cd Python-avx2
+popd
 
 %build
 export LANG=C
@@ -123,23 +123,22 @@ export CFLAGS="$CFLAGS -O3"
 %configure %python_configure_flags --enable-shared
 make %{?_smp_mflags}
 
-# pushd ../Python-avx2
-# export CFLAGS="$CFLAGS -march=haswell -mfma  "
-# export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
-
-# configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
-# make %{?_smp_mflags}
-# popd
+pushd ../Python-avx2
+export CFLAGS="$CFLAGS -march=haswell -mfma  "
+export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
+%configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
+make %{?_smp_mflags}
+popd
 
 %install
 
-# pushd ../Python-avx2
-# make_install
-# mkdir -p %{buildroot}/usr/lib64/haswell
-# mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
-# rm -rf %{buildroot}/usr/lib/*
-# rm -rf %{buildroot}/usr/bin/*
-# popd
+pushd ../Python-avx2
+%make_install
+mkdir -p %{buildroot}/usr/lib64/haswell
+mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
+rm -rf %{buildroot}/usr/lib/*
+rm -rf %{buildroot}/usr/bin/*
+popd
 
 
 %make_install
@@ -153,16 +152,17 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 # make profile-opt %{?_smp_mflags}
 # ./python Tools/pybench/pybench.py -n 20
 # popd
-
+# 
 # make clean
 # configure %python_configure_flags --enable-optimizations
 # make profile-opt %{?_smp_mflags}
 # ./python Tools/pybench/pybench.py -n 20
-#make_install
+# make_install
 
-# check
-# export LANG=C
-# LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
+
+%check
+export LANG=C
+LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
 
 %files
@@ -171,7 +171,7 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 /usr/lib64/libpython3.7m.so.1.0
 
 %files lib-avx2
-#/usr/lib64/haswell/libpython3.7m.so.1.0
+/usr/lib64/haswell/libpython3.7m.so.1.0
 
 %files core
 %exclude /usr/bin/2to3
@@ -202,7 +202,8 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 
 %files dev
 /usr/include/python3.7m/*.h
-#/usr/lib64/haswell/libpython3.7m.so
+/usr/lib64/haswell/libpython3.7m.so
+/usr/lib64/haswell/libpython3.so
 /usr/lib64/libpython3.7m.so
 /usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.7.pc
