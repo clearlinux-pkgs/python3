@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.0
-Release:        151
+Release:        152
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -164,7 +164,7 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 %files core
 %exclude /usr/bin/2to3
 /usr/bin/2to3-3.7
-%exclude /usr/bin/easy_install-3.7
+#exclude /usr/bin/easy_install-3.7
 /usr/bin/idle3
 /usr/bin/idle3.7
 %exclude /usr/bin/pip3
@@ -180,9 +180,9 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 /usr/bin/pyvenv
 /usr/bin/pyvenv-3.7
 /usr/lib/python3.7
-%exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
-%exclude /usr/lib/python3.7/site-packages/setuptools
-%exclude /usr/lib/python3.7/site-packages/pkg_resources
+#exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
+#exclude /usr/lib/python3.7/site-packages/setuptools
+#exclude /usr/lib/python3.7/site-packages/pkg_resources
 %exclude /usr/lib/python3.7/site-packages/pip
 %exclude /usr/lib/python3.7/site-packages/pip-10.0.1.dist-info
 %exclude /usr/lib/python3.7/site-packages/pip/_internal/
@@ -191,7 +191,6 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 %files dev
 /usr/include/python3.7m/*.h
 /usr/lib64/haswell/libpython3.7m.so
-/usr/lib64/haswell/libpython3.so
 /usr/lib64/libpython3.7m.so
 /usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.7.pc
