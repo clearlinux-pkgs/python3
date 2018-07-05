@@ -97,7 +97,7 @@ The Python Programming Language.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-# patch6 -p1
+%patch6 -p1
 # patch7 -p1
 
 pushd ..
@@ -136,18 +136,18 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 
 # --enable-optimizations does not work with --enable-shared
 # https://bugs.python.org/issue29712
-# pushd ../Python-avx2
-# make clean
-# configure %python_configure_flags --enable-optimizations
-# make profile-opt %{?_smp_mflags}
-# ./python Tools/pybench/pybench.py -n 20
-# popd
-# 
-# make clean
-# configure %python_configure_flags --enable-optimizations
-# make profile-opt %{?_smp_mflags}
-# ./python Tools/pybench/pybench.py -n 20
-# make_install
+pushd ../Python-avx2
+make clean
+%configure %python_configure_flags --enable-optimizations
+make profile-opt %{?_smp_mflags}
+./python Tools/pybench/pybench.py -n 20
+popd
+
+make clean
+%configure %python_configure_flags --enable-optimizations
+make profile-opt %{?_smp_mflags}
+./python Tools/pybench/pybench.py -n 20
+%make_install
 
 
 %check
