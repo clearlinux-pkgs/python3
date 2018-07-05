@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.0
-Release:        150
+Release:        151
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -34,7 +34,6 @@ BuildRequires:  procps-ng-bin
 BuildRequires:  netbase
 Requires: python3-core
 Requires: python3-lib
-Requires: python3-lib-avx2
 Requires: usrbinpython
 
 
@@ -49,15 +48,6 @@ Summary:        The Python Programming Language
 Group:          devel/python
 
 %description lib
-The Python Programming Language.
-
-%package lib-avx2
-License:        Python-2.0
-Summary:        The Python Programming Language
-Group:          devel/python
-Requires: 	python3-lib
-
-%description lib-avx2
 The Python Programming Language.
 
 %package core
@@ -168,10 +158,8 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 %files
 
 %files lib
-/usr/lib64/libpython3.7m.so.1.0
-
-%files lib-avx2
 /usr/lib64/haswell/libpython3.7m.so.1.0
+/usr/lib64/libpython3.7m.so.1.0
 
 %files core
 %exclude /usr/bin/2to3
