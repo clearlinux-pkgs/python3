@@ -1,7 +1,7 @@
 Too much C++ code breaks for now with this
 
---- Python-3.7.0/Include/unicodeobject.h~	2018-06-27 03:07:35.000000000 +0000
-+++ Python-3.7.0/Include/unicodeobject.h	2018-07-06 16:56:50.335808003 +0000
+--- unicodeobject.h~	2018-06-27 03:07:35.000000000 +0000
++++ unicodeobject.h	2018-07-06 16:56:50.335808003 +0000
 @@ -1135,7 +1135,7 @@
  */
  
