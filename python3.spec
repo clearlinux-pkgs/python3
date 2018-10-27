@@ -34,6 +34,9 @@ BuildRequires:  expat-dev
 BuildRequires:  libffi-dev
 BuildRequires:  procps-ng-bin
 BuildRequires:  netbase
+BuildRequires:  tk-dev
+BuildRequires:  tcl-dev
+BuildRequires:  libX11-dev
 Requires: python3-core
 Requires: python3-lib
 Requires: usrbinpython
