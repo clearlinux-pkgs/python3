@@ -109,8 +109,6 @@ popd
 
 %build
 export LANG=C
-
-# Build with PGO for perf improvement
 export CFLAGS="$CFLAGS -O3"
 %configure %python_configure_flags --enable-shared
 make %{?_smp_mflags}
@@ -142,13 +140,11 @@ pushd ../Python-avx2
 make clean
 %configure %python_configure_flags --enable-optimizations
 make profile-opt %{?_smp_mflags}
-./python Tools/pybench/pybench.py -n 20
 popd
 
 make clean
 %configure %python_configure_flags --enable-optimizations
 make profile-opt %{?_smp_mflags}
-./python Tools/pybench/pybench.py -n 20
 %make_install
 
 pushd %{buildroot}/usr/include/python3.7m
