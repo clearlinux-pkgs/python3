@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.1
-Release:        163
+Release:        164
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -87,14 +87,6 @@ Requires:	usrbinpython
 %description dev
 The Python Programming Language.
 
-%package doc
-License:        Python-2.0
-Summary:        The Python Programming Language
-Group:          devel/python
-
-%description doc
-The Python Programming Language.
-
 %prep
 %setup -q -n Python-%{version}
 %patch1 -p1
@@ -154,6 +146,8 @@ pushd %{buildroot}/usr/include/python3.7m
 cat %{SOURCE1} | patch -p0
 popd
 
+ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
+ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 
 
 %check
@@ -193,6 +187,7 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 %exclude /usr/lib/python3.7/site-packages/pip-10.0.1.dist-info
 %exclude /usr/lib/python3.7/site-packages/pip/_internal/
 %exclude /usr/lib/python3.7/test/
+%{_mandir}/man1/*
 
 %files dev
 /usr/include/python3.7m/*.h
@@ -202,6 +197,3 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 /usr/lib64/pkgconfig/python-3.7.pc
 /usr/lib64/pkgconfig/python-3.7m.pc
 /usr/lib64/pkgconfig/python3.pc
-
-%files doc
-%{_mandir}/man1/*
