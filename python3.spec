@@ -81,10 +81,21 @@ Requires:       python3-lib
 Requires:       python3-core
 Requires:	usrbinpython
 
+%package tcl
+License:        Python-2.0
+Summary:        The Python Programming Language
+Group:          devel
+Requires:       python3-lib
+Requires:       python3-core
+Requires:	usrbinpython
+
 %define python_configure_flags  --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto=8 --with-computed-gotos
 
 
 %description dev
+The Python Programming Language.
+
+%description tcl
 The Python Programming Language.
 
 %prep
@@ -187,6 +198,7 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 %exclude /usr/lib/python3.7/site-packages/pip-10.0.1.dist-info
 %exclude /usr/lib/python3.7/site-packages/pip/_internal/
 %exclude /usr/lib/python3.7/test/
+%exclude /usr/lib/python3.7/tkinter
 %{_mandir}/man1/*
 
 %files dev
@@ -197,3 +209,6 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 /usr/lib64/pkgconfig/python-3.7.pc
 /usr/lib64/pkgconfig/python-3.7m.pc
 /usr/lib64/pkgconfig/python3.pc
+
+%files tcl
+/usr/lib/python3.7/tkinter
