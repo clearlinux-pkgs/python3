@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.1
-Release:        165
+Release:        166
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -199,6 +199,8 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 %exclude /usr/lib/python3.7/site-packages/pip/_internal/
 %exclude /usr/lib/python3.7/test/
 %exclude /usr/lib/python3.7/tkinter
+%exclude /usr/lib/python3.7/lib-dynload/_tkinter.cpython-37m-x86_64-linux-gnu.so
+%exclude /usr/lib/python3.7/lib-dynload/_tkinter.cpython-37m-x86_64-linux-gnu.so.avx2
 %{_mandir}/man1/*
 
 %files dev
@@ -212,3 +214,5 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 
 %files tcl
 /usr/lib/python3.7/tkinter
+/usr/lib/python3.7/lib-dynload/_tkinter.cpython-37m-x86_64-linux-gnu.so
+/usr/lib/python3.7/lib-dynload/_tkinter.cpython-37m-x86_64-linux-gnu.so.avx2
