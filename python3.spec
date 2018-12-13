@@ -194,6 +194,7 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 #exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
 #exclude /usr/lib/python3.7/site-packages/setuptools
 #exclude /usr/lib/python3.7/site-packages/pkg_resources
+%exclude /usr/lib/python3.7/distutils/command/*.exe
 %exclude /usr/lib/python3.7/site-packages/pip
 %exclude /usr/lib/python3.7/site-packages/pip-10.0.1.dist-info
 %exclude /usr/lib/python3.7/site-packages/pip/_internal/
