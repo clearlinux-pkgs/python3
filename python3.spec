@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.7.1
+Version:        3.7.2
 Release:        168
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.7.1/Python-3.7.1.tar.xz
+Source0:        https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tar.xz
 Source1:	constcompat.patch
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
@@ -205,6 +205,7 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 
 %files dev
 /usr/include/python3.7m/*.h
+/usr/include/python3.7m/internal/*.h
 /usr/lib64/haswell/libpython3.7m.so
 /usr/lib64/libpython3.7m.so
 /usr/lib64/libpython3.so
