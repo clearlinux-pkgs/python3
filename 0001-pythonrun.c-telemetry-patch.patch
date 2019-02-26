@@ -1,0 +1,263 @@
+From 93a5e7e26acbde3fb3f268c17f0beb6dfc6cccfd Mon Sep 17 00:00:00 2001
+From: Juro Bystricky <juro.bystricky@intel.com>
+Date: Fri, 4 Jan 2019 09:04:01 -0800
+Subject: [PATCH] pythonrun.c: telemetry patch
+
+The patch taps into Python unhandled exception code and creates a telemetry probe payload.
+The payload is a text file, typically a traceback, identical to the output as displayed
+via stderr. The payload is expected to be sent to the telemetry backend server by a
+designated python probe. The probe itself is not a part of this patch, as we try not to
+be too invasive: we don't want to link Python binary against any telemetry libraries nor do
+we want to fork processes to launch probes. Instead the traceback file is simply placed into
+a location that is monitored by a designated probe.
+
+Implemetation:
+If telemetry is enabled (and we are not in Python interactive mode), we intercept stderr
+and  pipe the error text (traceback) into a temporary file. At the same time we also
+output all messages via the original stderr as well so the user receives all messages
+as usual.
+
+Once we captured the traceback in a file, we validate if the traceback originated
+in /usr/bin. If so, we move (via "rename") the traceback file into a location
+(/var/lib/telemetry/python) created and monitored by a python telemetry probe.
+The probe will detect the new file and send the traceback to the telemetry backend
+as a payload.
+
+If we encounter any errors, we do not create the telemetry file. This should be
+the worst case scenario. For example, if the python probe is not present the "rename"
+will fail due to the missing destination folder.
+
+Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
+---
+ Python/pythonrun.c | 197 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 197 insertions(+)
+
+diff --git a/Python/pythonrun.c b/Python/pythonrun.c
+index c4ec5ac66c..372d3d0ee3 100644
+--- a/Python/pythonrun.c
++++ b/Python/pythonrun.c
+@@ -637,10 +637,204 @@ handle_system_exit(void)
+     /* NOTREACHED */
+ }
+ 
++/* *** Telemetery patch (code/definitions) start *** */
++
++#define TM_RECORD_VERSION 1
++#define TM_CLASS "python-exception"
++#define TM_LEVEL 3
++#define TM_TMP_DIR   "/var/tmp/telemetry"
++#define TM_PROBE_DIR "/var/lib/telemetry/python"
++#define TM_OPT_OUT   "/etc/telemetrics/opt-out"
++
++/* Make sure we are using glibc version of basename() */
++#ifndef _GNU_SOURCE
++    #error "_GNU_SOURCE not defined"
++#endif
++
++#include <stdbool.h>
++#include <dirent.h>
++
++static int telemetry_fd_pipe[2];
++static int telemetry_fd_stderr_orig;
++static int telemetry_fd_file;
++static pthread_t telemetry_tid;
++static char telemetry_filename[PATH_MAX];
++
++/* Parse a line in captured tracback. Return false to prevent sending */
++static bool telemetry_parse_line(char *line)
++{
++    char *src = line;
++
++    while (isspace((unsigned char)*src)) {
++        src++;
++    }
++
++    /* Only interested in exceptions in /usr/bin */
++    if (strncmp(src, "File \"/usr/bin/", (sizeof("File \"/usr/bin/") - 1)) == 0) {
++        return true;
++    }
++
++    /* Reject any other file path */
++    if (strncmp(src, "File \"", (sizeof("File \"") - 1)) == 0) {
++        return false;
++    }
++
++   return true;
++}
++
++static bool telemetry_process_log(int fd)
++{
++    bool result;
++    char line[256];
++
++    FILE* fp = fdopen(fd, "r");
++    if (fp == NULL) {
++        close(fd);
++        return false;
++    }
++
++    rewind(fp);
++    result = true;
++
++    while (fgets(line, sizeof(line), fp)) {
++        if (telemetry_parse_line(line) == false) {
++            result = false;
++            break;
++        }
++    }
++
++    fclose(fp); /* this will also close fd */
++    return result;
++}
++
++static void *telemetry_reader(void *dummy)
++{
++    while (1) {
++        char c;
++
++        /* Check for errors */
++        if (read (telemetry_fd_pipe[0], &c, 1) < 0) {
++            break;
++        }
++
++        /* Check for our EOF */
++        if (c == '\0')
++            break;
++
++        write(telemetry_fd_stderr_orig, &c, 1);
++        write(telemetry_fd_file, &c, 1);
++    }
++
++    return NULL;
++}
++
++/* Start monitoring/capturing stderr output */
++
++static int telemetry_file_open(void)
++{
++    int ret;
++
++    /* Check if TM_PROBE_DIR exists */
++    DIR* dir = opendir(TM_PROBE_DIR);
++    if (dir) {
++        closedir(dir);
++    } else {
++        return -1;
++    }
++
++    /* Check if telemetry allowed by user */
++    if (access(TM_OPT_OUT, F_OK) == 0) {
++        return -1;
++    }
++
++    /* Ignore exceptions in interactive mode */
++    if (PyId_ps1.object != NULL) {
++        return -1;
++    }
++
++    ret = snprintf(telemetry_filename, sizeof(telemetry_filename),
++                   "%s/%d.%s.%d.XXXXXX", TM_TMP_DIR, TM_RECORD_VERSION,
++                   TM_CLASS, TM_LEVEL);
++
++    /* check for errors or truncation */
++    if (ret < 0 || ret >= (int)sizeof(telemetry_filename)) {
++        return -1;
++    }
++
++    telemetry_fd_file = mkstemp(telemetry_filename);
++    if (telemetry_fd_file < 0) {
++        return -1;
++    }
++
++    if (fchmod(telemetry_fd_file, 0644) != 0) {
++        return -1;
++    }
++
++    if (pipe(telemetry_fd_pipe) == -1) {
++        return -1;
++    }
++
++    /* Save stderr, redirect stderr to pipe and start monitoring the pipe*/
++    telemetry_fd_stderr_orig = dup(STDERR_FILENO);
++    dup2(telemetry_fd_pipe[1], STDERR_FILENO);
++    pthread_create(&telemetry_tid, NULL, telemetry_reader, NULL);
++    return telemetry_fd_file;
++}
++
++static void telemetry_file_close(int fd)
++{
++    if (fd == -1) {
++        return;
++    }
++
++    /* Flush internal buffers to our pipe */
++    flush_io();
++
++    /* Wait for the telemetry_reader thread to finish */
++    write(telemetry_fd_pipe[1],"\0",1);
++    pthread_join(telemetry_tid, NULL);
++
++    /* Restore the original stderr */
++    close(telemetry_fd_pipe[1]);
++    close(telemetry_fd_pipe[0]);
++    fsync(telemetry_fd_file);
++    dup2(telemetry_fd_stderr_orig, STDERR_FILENO);
++
++    if (telemetry_process_log(fd)) {
++        char *filename_n;
++        char newname[PATH_MAX];
++        int ret;
++
++        filename_n = basename(telemetry_filename);
++        if (!filename_n) {
++            goto Err;
++        }
++
++        ret = snprintf(newname, sizeof(newname),"%s/%s", TM_PROBE_DIR,
++                       filename_n);
++
++        /* check for errors or truncation */
++        if (ret < 0 || ret >= (int)sizeof(telemetry_filename)) {
++            goto Err;
++        }
++
++        if (rename(telemetry_filename, newname) < 0) {
++            goto Err;
++        }
++        return;
++    }
++
++Err:;
++    unlink(telemetry_filename);
++}
++
++/* *** Telemetery patch (code/definitions) end *** */
++
+ void
+ PyErr_PrintEx(int set_sys_last_vars)
+ {
+     PyObject *exception, *v, *tb, *hook;
++    int fd_telem;
+ 
+     if (PyErr_ExceptionMatches(PyExc_SystemExit)) {
+         handle_system_exit();
+@@ -668,6 +862,8 @@ PyErr_PrintEx(int set_sys_last_vars)
+             PyErr_Clear();
+         }
+     }
++
++    fd_telem = telemetry_file_open();
+     hook = _PySys_GetObjectId(&PyId_excepthook);
+     if (hook) {
+         PyObject* stack[3];
+@@ -712,6 +908,7 @@ PyErr_PrintEx(int set_sys_last_vars)
+     Py_XDECREF(exception);
+     Py_XDECREF(v);
+     Py_XDECREF(tb);
++    telemetry_file_close(fd_telem);
+ }
+ 
+ static void
+-- 
+2.20.1
+
