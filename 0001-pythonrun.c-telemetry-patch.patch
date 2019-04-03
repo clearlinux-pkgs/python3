@@ -1,4 +1,4 @@
-From 93a5e7e26acbde3fb3f268c17f0beb6dfc6cccfd Mon Sep 17 00:00:00 2001
+From 0cb2ea62b55b040a3a49a0320523fbc723a8a33c Mon Sep 17 00:00:00 2001
 From: Juro Bystricky <juro.bystricky@intel.com>
 Date: Fri, 4 Jan 2019 09:04:01 -0800
 Subject: [PATCH] pythonrun.c: telemetry patch
@@ -29,14 +29,14 @@ will fail due to the missing destination folder.
 
 Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
 ---
- Python/pythonrun.c | 197 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 197 insertions(+)
+ Python/pythonrun.c | 200 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 200 insertions(+)
 
 diff --git a/Python/pythonrun.c b/Python/pythonrun.c
-index c4ec5ac66c..372d3d0ee3 100644
+index c4ec5ac66c..ae3b962b92 100644
 --- a/Python/pythonrun.c
 +++ b/Python/pythonrun.c
-@@ -637,10 +637,204 @@ handle_system_exit(void)
+@@ -637,10 +637,207 @@ handle_system_exit(void)
      /* NOTREACHED */
  }
  
@@ -64,7 +64,8 @@ index c4ec5ac66c..372d3d0ee3 100644
 +static char telemetry_filename[PATH_MAX];
 +
 +/* Parse a line in captured tracback. Return false to prevent sending */
-+static bool telemetry_parse_line(char *line)
++/* Beware some traceback messages do not contain any path, we don't want those */
++static bool telemetry_parse_line(char *line, bool *path_ok)
 +{
 +    char *src = line;
 +
@@ -74,6 +75,7 @@ index c4ec5ac66c..372d3d0ee3 100644
 +
 +    /* Only interested in exceptions in /usr/bin */
 +    if (strncmp(src, "File \"/usr/bin/", (sizeof("File \"/usr/bin/") - 1)) == 0) {
++        *path_ok = true;
 +        return true;
 +    }
 +
@@ -87,7 +89,7 @@ index c4ec5ac66c..372d3d0ee3 100644
 +
 +static bool telemetry_process_log(int fd)
 +{
-+    bool result;
++    bool result, path_ok;
 +    char line[256];
 +
 +    FILE* fp = fdopen(fd, "r");
@@ -98,16 +100,17 @@ index c4ec5ac66c..372d3d0ee3 100644
 +
 +    rewind(fp);
 +    result = true;
++    path_ok = false;
 +
 +    while (fgets(line, sizeof(line), fp)) {
-+        if (telemetry_parse_line(line) == false) {
++        if (telemetry_parse_line(line, &path_ok) == false) {
 +            result = false;
 +            break;
 +        }
 +    }
 +
 +    fclose(fp); /* this will also close fd */
-+    return result;
++    return (result && path_ok);
 +}
 +
 +static void *telemetry_reader(void *dummy)
@@ -169,7 +172,7 @@ index c4ec5ac66c..372d3d0ee3 100644
 +        return -1;
 +    }
 +
-+    if (fchmod(telemetry_fd_file, 0644) != 0) {
++    if (fchmod(telemetry_fd_file, 0666) != 0) {
 +        return -1;
 +    }
 +
@@ -241,7 +244,7 @@ index c4ec5ac66c..372d3d0ee3 100644
  
      if (PyErr_ExceptionMatches(PyExc_SystemExit)) {
          handle_system_exit();
-@@ -668,6 +862,8 @@ PyErr_PrintEx(int set_sys_last_vars)
+@@ -668,6 +865,8 @@ PyErr_PrintEx(int set_sys_last_vars)
              PyErr_Clear();
          }
      }
@@ -250,7 +253,7 @@ index c4ec5ac66c..372d3d0ee3 100644
      hook = _PySys_GetObjectId(&PyId_excepthook);
      if (hook) {
          PyObject* stack[3];
-@@ -712,6 +908,7 @@ PyErr_PrintEx(int set_sys_last_vars)
+@@ -712,6 +911,7 @@ PyErr_PrintEx(int set_sys_last_vars)
      Py_XDECREF(exception);
      Py_XDECREF(v);
      Py_XDECREF(tb);
@@ -259,5 +262,5 @@ index c4ec5ac66c..372d3d0ee3 100644
  
  static void
 -- 
-2.20.1
+2.21.0
 
