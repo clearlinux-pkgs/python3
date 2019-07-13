@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.7.3
+Version:        3.7.4
 Release:        177
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xz
+Source0:        https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz
 Source1:	constcompat.patch
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
@@ -14,7 +14,6 @@ Patch4:         0004-Add-avx2-and-avx512-support.patch
 Patch5:         0005-Build-avx2-and-avx512-versions-of-the-math-library.patch
 Patch6:         0001-Add-pybench-for-pgo-optimization.patch
 Patch8:         0001-pythonrun.c-telemetry-patch.patch
-Patch9:         CVE-2019-9740.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -108,7 +107,6 @@ The Python Programming Language.
 %patch5 -p1
 %patch6 -p1
 %patch8 -p1
-%patch9 -p1
 
 pushd ..
 cp -a Python-%{version} Python-avx2
