@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.4
-Release:        177
+Release:        178
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -41,7 +41,7 @@ Requires: python3-core
 Requires: python3-lib
 Requires: usrbinpython
 
-
+%define keepstatic 1
 %global __arch_install_post %{nil}
 
 %description
@@ -152,7 +152,9 @@ make clean
 %configure %python_configure_flags --enable-optimizations
 make profile-opt %{?_smp_mflags}
 %make_install
-
+# static library archives need to be writable for strip to work
+install -m 0755 %{buildroot}/usr/lib/libpython3.7m.a %{buildroot}/usr/lib64/
+rm %{buildroot}/usr/lib/libpython3.7m.a
 pushd %{buildroot}/usr/include/python3.7m
 cat %{SOURCE1} | patch -p0
 popd
@@ -170,6 +172,7 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 
 %files lib
 /usr/lib64/haswell/libpython3.7m.so.1.0
+/usr/lib64/libpython3.7m.a
 /usr/lib64/libpython3.7m.so.1.0
 
 %files core
