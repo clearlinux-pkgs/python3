@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.4
-Release:        178
+Release:        179
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -53,6 +53,13 @@ Summary:        The Python Programming Language
 Group:          devel/python
 
 %description lib
+The Python Programming Language.
+%package staticdev
+License:        Python-2.0
+Summary:        The Python Programming Language
+Group:          devel/python
+
+%description staticdev
 The Python Programming Language.
 
 %package core
@@ -172,8 +179,10 @@ LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_async
 
 %files lib
 /usr/lib64/haswell/libpython3.7m.so.1.0
-/usr/lib64/libpython3.7m.a
 /usr/lib64/libpython3.7m.so.1.0
+
+%files staticdev
+/usr/lib64/libpython3.7m.a
 
 %files core
 %exclude /usr/bin/2to3
