@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.4
-Release:        182
+Release:        183
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -14,6 +14,8 @@ Patch4:         0004-Add-avx2-and-avx512-support.patch
 Patch5:         0005-Build-avx2-and-avx512-versions-of-the-math-library.patch
 Patch6:         0001-Add-pybench-for-pgo-optimization.patch
 Patch8:         0001-pythonrun.c-telemetry-patch.patch
+
+Patch9: 	CVE-2019-16056.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -114,6 +116,7 @@ The Python Programming Language.
 %patch5 -p1
 %patch6 -p1
 %patch8 -p1
+%patch9 -p1
 
 pushd ..
 cp -a Python-%{version} Python-avx2
