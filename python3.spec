@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.7.4
-Release:        185
+Release:        186
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -16,6 +16,7 @@ Patch6:         0001-Add-pybench-for-pgo-optimization.patch
 Patch8:         0001-pythonrun.c-telemetry-patch.patch
 
 Patch9: 	CVE-2019-16056.patch
+Patch10:    CVE-2019-16935.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -117,6 +118,7 @@ The Python Programming Language.
 %patch6 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 
 pushd ..
 cp -a Python-%{version} Python-avx2
