@@ -1,7 +1,7 @@
-From bf42ee70286b82975db9e4dc6da526d2e64ecf89 Mon Sep 17 00:00:00 2001
-From: Juro Bystricky <juro.bystricky@intel.com>
-Date: Fri, 4 Jan 2019 09:04:01 -0800
-Subject: [PATCH] pythonrun.c: telemetry patch
+From 6395d36ded756cf7747062ce57876a24662e1fa7 Mon Sep 17 00:00:00 2001
+From: William Douglas <william.douglas@intel.com>
+Date: Thu, 31 Oct 2019 14:16:48 -0700
+Subject: [PATCH 5/6] pythonrun.c: telemetry patch
 
 If the telemetry library is available, the patch taps into Python unhandled exception code
 and creates a telemetry probe payload. The payload is typically a traceback, identical
@@ -30,12 +30,12 @@ Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
  1 file changed, 274 insertions(+)
 
 diff --git a/Python/pythonrun.c b/Python/pythonrun.c
-index c4ec5ac66c..1c1fbb67b1 100644
+index f1d946a..1a0ee81 100644
 --- a/Python/pythonrun.c
 +++ b/Python/pythonrun.c
-@@ -637,10 +637,280 @@ handle_system_exit(void)
-     /* NOTREACHED */
+@@ -660,10 +660,281 @@ handle_system_exit(void)
  }
+ 
  
 +/* *** Telemetry patch (code/definitions) start *** */
 +
@@ -306,16 +306,17 @@ index c4ec5ac66c..1c1fbb67b1 100644
 +
 +/* *** Telemetry patch (code/definitions) end *** */
 +
- void
- PyErr_PrintEx(int set_sys_last_vars)
++
+ static void
+ _PyErr_PrintEx(PyThreadState *tstate, int set_sys_last_vars)
  {
      PyObject *exception, *v, *tb, *hook;
 +    int fd_telem;
  
-     if (PyErr_ExceptionMatches(PyExc_SystemExit)) {
-         handle_system_exit();
-@@ -668,6 +939,8 @@ PyErr_PrintEx(int set_sys_last_vars)
-             PyErr_Clear();
+     handle_system_exit();
+ 
+@@ -694,6 +965,8 @@ _PyErr_PrintEx(PyThreadState *tstate, int set_sys_last_vars)
+             _PyErr_Clear(tstate);
          }
      }
 +
@@ -323,14 +324,14 @@ index c4ec5ac66c..1c1fbb67b1 100644
      hook = _PySys_GetObjectId(&PyId_excepthook);
      if (hook) {
          PyObject* stack[3];
-@@ -712,6 +985,7 @@ PyErr_PrintEx(int set_sys_last_vars)
+@@ -740,6 +1013,7 @@ done:
      Py_XDECREF(exception);
      Py_XDECREF(v);
      Py_XDECREF(tb);
 +    telemetry_file_close(fd_telem);
  }
  
- static void
+ void
 -- 
 2.23.0
 

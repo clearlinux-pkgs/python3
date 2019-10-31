@@ -1,7 +1,7 @@
-From a978c4a56901b46796b3792f12bac1f3a867621a Mon Sep 17 00:00:00 2001
+From 4a5fc65e856eda41c42838e06fec6bd76f846ab7 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Thu, 7 Jun 2018 21:33:45 +0000
-Subject: [PATCH 2/5] Skip tests TODO fix skips
+Subject: [PATCH 2/6] Skip tests TODO fix skips
 
 These tests had been failing years ago and probably haven't been
 rechecked to see if that is still the case. For now continue to put
@@ -33,10 +33,10 @@ index 6453a02..2f500fb 100644
          # let's create a package that breaks bdist_rpm
          tmp_dir = self.mkdtemp()
 diff --git a/Lib/distutils/tests/test_sysconfig.py b/Lib/distutils/tests/test_sysconfig.py
-index fe4a299..5d8129f 100644
+index 236755d..4b40aad 100644
 --- a/Lib/distutils/tests/test_sysconfig.py
 +++ b/Lib/distutils/tests/test_sysconfig.py
-@@ -116,6 +116,7 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
+@@ -192,6 +192,7 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
                               'OTHER': 'foo'})
  
  
@@ -44,7 +44,7 @@ index fe4a299..5d8129f 100644
      def test_sysconfig_module(self):
          import sysconfig as global_sysconfig
          self.assertEqual(global_sysconfig.get_config_var('CFLAGS'),
-@@ -125,6 +126,7 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
+@@ -201,6 +202,7 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
  
      @unittest.skipIf(sysconfig.get_config_var('CUSTOMIZED_OSX_COMPILER'),
                       'compiler flags customized')
@@ -53,5 +53,5 @@ index fe4a299..5d8129f 100644
          # On OS X, binary installers support extension module building on
          # various levels of the operating system with differing Xcode
 -- 
-2.17.0
+2.23.0
 

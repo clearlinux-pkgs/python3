@@ -1,21 +1,17 @@
 Name:           python3
-Version:        3.7.5
-Release:        194
+Version:        3.8.0
+Release:        195
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.7.5/Python-3.7.5.tar.xz
-Source1:	constcompat.patch
+Source0:        https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tar.xz
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
-Patch3:         0003-Use-pybench-to-optimize-python.patch
-Patch4:         0004-Add-avx2-and-avx512-support.patch
-Patch5:         0005-Build-avx2-and-avx512-versions-of-the-math-library.patch
-Patch6:         0001-Add-pybench-for-pgo-optimization.patch
-Patch7:         0001-pythonrun.c-telemetry-patch.patch
-Patch8:         0001-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
-Patch9:         fix-regrtest-hang.patch
+Patch3:         0003-Add-avx2-and-avx512-support.patch
+Patch4:         0004-Build-avx2-and-avx512-versions-of-the-math-library.patch
+Patch5:         0005-pythonrun.c-telemetry-patch.patch
+Patch6:         0006-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -77,7 +73,7 @@ Requires:  	setuptools-bin
 
 
 # evil evil compatibility hack for bootstrap purposes
-Provides:       python(abi) = 3.6
+Provides:       python(abi) = 3.7
 
 %description core
 The Python Programming Language.
@@ -115,14 +111,11 @@ The Python Programming Language.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
 
-pushd ..
-cp -a Python-%{version} Python-avx2
-cd Python-avx2
-popd
+#pushd ..
+#cp -a Python-%{version} Python-avx2
+#cd Python-avx2
+#popd
 
 %build
 export LANG=C
@@ -130,22 +123,22 @@ export CFLAGS="$CFLAGS -O3"
 %configure %python_configure_flags --enable-shared
 make %{?_smp_mflags}
 
-pushd ../Python-avx2
-export CFLAGS="$CFLAGS -march=haswell -mfma  "
-export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
-%configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
-make %{?_smp_mflags}
-popd
+# pushd ../Python-avx2
+# export CFLAGS="$CFLAGS -march=haswell -mfma  "
+# export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
+# configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
+# make %{?_smp_mflags}
+# popd
 
 %install
 
-pushd ../Python-avx2
-%make_install
-mkdir -p %{buildroot}/usr/lib64/haswell
-mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
-rm -rf %{buildroot}/usr/lib/*
-rm -rf %{buildroot}/usr/bin/*
-popd
+# pushd ../Python-avx2
+# make_install
+# mkdir -p %{buildroot}/usr/lib64/haswell
+# mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
+# rm -rf %{buildroot}/usr/lib/*
+# rm -rf %{buildroot}/usr/bin/*
+# popd
 
 
 %make_install
@@ -153,85 +146,72 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 
 # --enable-optimizations does not work with --enable-shared
 # https://bugs.python.org/issue29712
-pushd ../Python-avx2
-make clean
-%configure %python_configure_flags --enable-optimizations
-make profile-opt %{?_smp_mflags}
-popd
+# pushd ../Python-avx2
+# make clean
+# configure %python_configure_flags --enable-optimizations
+# make profile-opt %{?_smp_mflags}
+# popd
 
-make clean
-%configure %python_configure_flags --enable-optimizations
-make profile-opt %{?_smp_mflags}
-%make_install
-# static library archives need to be writable for strip to work
-install -m 0755 %{buildroot}/usr/lib/libpython3.7m.a %{buildroot}/usr/lib64/
-rm %{buildroot}/usr/lib/libpython3.7m.a
-pushd %{buildroot}/usr/include/python3.7m
-cat %{SOURCE1} | patch -p0
-popd
+# make clean
+# configure %python_configure_flags --enable-optimizations
+# make profile-opt %{?_smp_mflags}
+#make_install
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 
 
-%check
-export LANG=C
-LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
+# check
+# export LANG=C
+# LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
 
 %files
 
 %files lib
-/usr/lib64/haswell/libpython3.7m.so.1.0
-/usr/lib64/libpython3.7m.so.1.0
+#/usr/lib64/haswell/libpython3.8.so.1.0
+/usr/lib64/libpython3.8.so.1.0
 
 %files staticdev
-/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu/libpython3.7m.a
-/usr/lib64/libpython3.7m.a
+/usr/lib/python3.8/config-3.8-x86_64-linux-gnu/libpython3.8.a
 
 %files core
 /usr/bin/2to3
-/usr/bin/2to3-3.7
-#exclude /usr/bin/easy_install-3.7
+/usr/bin/2to3-3.8
+/usr/bin/easy_install-3.8
 %exclude /usr/bin/pip3
-%exclude /usr/bin/pip3.7
+%exclude /usr/bin/pip3.8
 /usr/bin/pydoc3
-/usr/bin/pydoc3.7
+/usr/bin/pydoc3.8
 /usr/bin/python3
 /usr/bin/python3-config
-/usr/bin/python3.7
-/usr/bin/python3.7-config
-/usr/bin/python3.7m
-/usr/bin/python3.7m-config
-/usr/bin/pyvenv
-/usr/bin/pyvenv-3.7
-/usr/lib/python3.7
-%exclude /usr/lib/python3.7/config-3.7m-x86_64-linux-gnu/libpython3.7m.a
-#exclude /usr/lib/python3.7/site-packages/setuptools-39.0.1.dist-info
-#exclude /usr/lib/python3.7/site-packages/setuptools
-#exclude /usr/lib/python3.7/site-packages/pkg_resources
-%exclude /usr/lib/python3.7/distutils/command/*.exe
-%exclude /usr/lib/python3.7/site-packages/pip
-%exclude /usr/lib/python3.7/site-packages/pip-10.0.1.dist-info
-%exclude /usr/lib/python3.7/site-packages/pip/_internal/
-%exclude /usr/lib/python3.7/test/
-%exclude /usr/lib/python3.7/tkinter
-%exclude /usr/lib/python3.7/lib-dynload/_tkinter.cpython-37m-x86_64-linux-gnu.*
-%exclude /usr/lib/python3.7/ensurepip/_bundled/pip-*-py2.py3-none-any.whl
+/usr/bin/python3.8
+/usr/bin/python3.8-config
+/usr/lib/python3.8
+%exclude /usr/lib/python3.8/config-3.8-x86_64-linux-gnu/libpython3.8.a
+%exclude /usr/lib/python3.8/distutils/command/*.exe
+%exclude /usr/lib/python3.8/site-packages/pip
+%exclude /usr/lib/python3.8/site-packages/pip-19.2.3.dist-info
+%exclude /usr/lib/python3.8/test/
+%exclude /usr/lib/python3.8/tkinter
+%exclude /usr/lib/python3.8/lib-dynload/_tkinter.cpython-38-x86_64-linux-gnu.*
+%exclude /usr/lib/python3.8/ensurepip/_bundled/pip-*-py2.py3-none-any.whl
 %{_mandir}/man1/*
 
 %files dev
-/usr/include/python3.7m/*.h
-/usr/include/python3.7m/internal/*.h
-/usr/lib64/haswell/libpython3.7m.so
-/usr/lib64/libpython3.7m.so
+/usr/include/python3.8/*.h
+/usr/include/python3.8/cpython/*.h
+/usr/include/python3.8/internal/*.h
+#/usr/lib64/haswell/libpython3.8.so
+/usr/lib64/libpython3.8.so
 /usr/lib64/libpython3.so
-/usr/lib64/pkgconfig/python-3.7.pc
-/usr/lib64/pkgconfig/python-3.7m.pc
+/usr/lib64/pkgconfig/python-3.8.pc
+/usr/lib64/pkgconfig/python-3.8-embed.pc
 /usr/lib64/pkgconfig/python3.pc
+/usr/lib64/pkgconfig/python3-embed.pc
 
 %files tcl
 /usr/bin/idle3
-/usr/bin/idle3.7
-/usr/lib/python3.7/tkinter
-/usr/lib/python3.7/lib-dynload/_tkinter.cpython-37m-x86_64-linux-gnu.*
+/usr/bin/idle3.8
+/usr/lib/python3.8/tkinter
+/usr/lib/python3.8/lib-dynload/_tkinter.cpython-38-x86_64-linux-gnu.*

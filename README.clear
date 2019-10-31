@@ -1,7 +1,7 @@
 Updating python3 guide:
 - Create compat python package with the current version of python (remove all non minor version specific bits)
 - Rebase patches, validate they apply, fixup those that don't or remove them
-- Get things building without optimizations or tests and ensure setuptools and easy_install excludes are turned off
+- Get things building without optimizations or tests and ensure easy_install exclude is turned off
 - Turn on the optimizations and tests and validate results
 - Turn optimizations and tests back off before koji
 - Run make repoadd on new python and test autospec on setuptools, ensure new version of python is used
@@ -15,4 +15,5 @@ Updating python3 guide:
 - Validate the set builds, and fix whatever does not, may need a few rebuild cycles
 - Once everything is building and a release has been made turn back on the optimizations and tests for the updated python3
 - Make new release with new version of python3 with all the bells and whistles
+- Rebuild any package with avx2/avx512 python binaries
 - The end =)
