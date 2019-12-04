@@ -10,7 +10,18 @@ Updating python3 guide:
 - Untag the just built setuptools in koji
 - Turn back on the setuptools and easy_install excludes from python3 and throw it into koji
 - Move back to the version of setuptools that was untagged in koji
-- Autospec pip, setuptools_scm, pbr, py, six, tox, pytest and throw into koji (in that order)
+- Block configparser (if not done already)
+- Autospec + koji pip, setuptools_scm, pbr, py, six, tox, pytest, nose, numpy, coverage, Solaar, sip, scons, pyside2-setup, mock, nodejs, ldb, samba, gobject-introspection, pygobject, pycairo, pybtex, yarg, dldt, greenlet, zope.proxy, talloc, persistent, mpi4py (in that order, though some aren't dependencies this is just an order that works some can be done in parallel)
+- python3.8 only
+ - Autospec + koji backports.weakref, subunit, util-linux, gmqtt, json5, pylama, suds-jurko, cve-bin-tool, gsutil with new exclude path for new python version components
+ - Autospec + koji OpenIPMI, pymongo, sphinx-feature-classification, stestr, wcwidth, yappi, junit-xml, pypandoc, WebTest, Routes, jarn.viewdoc, repose.sphinx.autointerface, oslo.upgradecheck, flake8-class-newline, ruamel-yaml (in that order)
+ - Autospec + koji fontforge, krita, FreeCAD, pytorch, meld, azure-iot-sdk with workaround patch for python3.8
+ - drop mozjs, mozjs52, compat-opencv-soname32, compat-opencv-soname33, compat-protobuf-soname14, compat-protobuf-soname15
+ - protobuf update to latest (and rebuild its dependencies: CuraEngine, ParaView, R-RProtoBuf, R-protolite, libArcus, mosh, mumble, pdns, pdns-recursor, protobuf-c, sysdig, azure-iot-sdk, ceph, collectd, postgis, quagga)
+ - Update mozjs60 with buildreq on python
+ - Update manually (update install path) + koji bash_kernel
+- Update manually (rename files, update paths for new python version) + koji boost, opencv
+- ipython remove install_append -> autospec + koji -> (after rebuilding the ecosystem) add back install-append -> autospec + koji
 - Bump + koji all the packages (could do just those that have a spec file with '%files python3' or build require python3)
 - Validate the set builds, and fix whatever does not, may need a few rebuild cycles
 - Once everything is building and a release has been made turn back on the optimizations and tests for the updated python3

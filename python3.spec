@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.8.0
-Release:        195
+Release:        196
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -12,6 +12,7 @@ Patch3:         0003-Add-avx2-and-avx512-support.patch
 Patch4:         0004-Build-avx2-and-avx512-versions-of-the-math-library.patch
 Patch5:         0005-pythonrun.c-telemetry-patch.patch
 Patch6:         0006-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
+Patch7:         0007-Force-config-to-always-be-shared.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -111,11 +112,12 @@ The Python Programming Language.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
-#pushd ..
-#cp -a Python-%{version} Python-avx2
-#cd Python-avx2
-#popd
+pushd ..
+cp -a Python-%{version} Python-avx2
+cd Python-avx2
+popd
 
 %build
 export LANG=C
@@ -123,22 +125,23 @@ export CFLAGS="$CFLAGS -O3"
 %configure %python_configure_flags --enable-shared
 make %{?_smp_mflags}
 
-# pushd ../Python-avx2
-# export CFLAGS="$CFLAGS -march=haswell -mfma  "
-# export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
-# configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
-# make %{?_smp_mflags}
-# popd
+pushd ../Python-avx2
+export CFLAGS="$CFLAGS -march=haswell -mfma  "
+export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
+%configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
+make %{?_smp_mflags}
+popd
 
 %install
 
-# pushd ../Python-avx2
-# make_install
-# mkdir -p %{buildroot}/usr/lib64/haswell
-# mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
-# rm -rf %{buildroot}/usr/lib/*
-# rm -rf %{buildroot}/usr/bin/*
-# popd
+pushd ../Python-avx2
+%make_install
+
+mkdir -p %{buildroot}/usr/lib64/haswell
+mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
+rm -rf %{buildroot}/usr/lib/*
+rm -rf %{buildroot}/usr/bin/*
+popd
 
 
 %make_install
@@ -146,39 +149,43 @@ mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 
 # --enable-optimizations does not work with --enable-shared
 # https://bugs.python.org/issue29712
-# pushd ../Python-avx2
-# make clean
-# configure %python_configure_flags --enable-optimizations
-# make profile-opt %{?_smp_mflags}
-# popd
+pushd ../Python-avx2
+make clean
+%configure %python_configure_flags --enable-optimizations
+make profile-opt %{?_smp_mflags}
+popd
 
-# make clean
-# configure %python_configure_flags --enable-optimizations
-# make profile-opt %{?_smp_mflags}
-#make_install
+make clean
+%configure %python_configure_flags --enable-optimizations
+make profile-opt %{?_smp_mflags}
+%make_install
+# static library archives need to be writable for strip to work
+install -m 0755 %{buildroot}/usr/lib/libpython3.8.a %{buildroot}/usr/lib64/
+rm %{buildroot}/usr/lib/libpython3.8.a
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 
 
-# check
-# export LANG=C
-# LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
+%check
+export LANG=C
+LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
 
 %files
 
 %files lib
-#/usr/lib64/haswell/libpython3.8.so.1.0
+/usr/lib64/haswell/libpython3.8.so.1.0
 /usr/lib64/libpython3.8.so.1.0
 
 %files staticdev
 /usr/lib/python3.8/config-3.8-x86_64-linux-gnu/libpython3.8.a
+/usr/lib64/libpython3.8.a
 
 %files core
 /usr/bin/2to3
 /usr/bin/2to3-3.8
-/usr/bin/easy_install-3.8
+#/usr/bin/easy_install-3.8
 %exclude /usr/bin/pip3
 %exclude /usr/bin/pip3.8
 /usr/bin/pydoc3
@@ -202,7 +209,7 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 /usr/include/python3.8/*.h
 /usr/include/python3.8/cpython/*.h
 /usr/include/python3.8/internal/*.h
-#/usr/lib64/haswell/libpython3.8.so
+/usr/lib64/haswell/libpython3.8.so
 /usr/lib64/libpython3.8.so
 /usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.8.pc
