@@ -52,7 +52,7 @@ index f1d946a..1a0ee81 100644
 +static pthread_t telemetry_tid;
 +static char telemetry_filename[]="/var/tmp/telemetry_temp.XXXXXX";
 +
-+#define TELEMETRY_LIB "/usr/lib64/libtelemetry.so.3"
++#define TELEMETRY_LIB "/usr/lib64/libtelemetry.so.4"
 +
 +static void *tm_dlhandle;
 +
