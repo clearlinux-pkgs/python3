@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.8.1
-Release:        200
+Release:        201
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -98,7 +98,7 @@ Requires:       python3-lib
 Requires:       python3-core
 Requires:	usrbinpython
 
-%define python_configure_flags  --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto=8 --with-computed-gotos
+%define python_configure_flags  --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto=8 --with-computed-gotos --without-ensurepip
 
 
 %description dev
@@ -208,7 +208,6 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 %exclude /usr/lib/python3.8/test/
 %exclude /usr/lib/python3.8/tkinter
 %exclude /usr/lib/python3.8/lib-dynload/_tkinter.cpython-38-x86_64-linux-gnu.*
-%exclude /usr/lib/python3.8/ensurepip/_bundled/pip-*-py2.py3-none-any.whl
 %{_mandir}/man1/*
 
 %files dev
