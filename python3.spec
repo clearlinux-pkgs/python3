@@ -8,7 +8,7 @@ Group:          devel/python
 Source0:        https://www.python.org/ftp/python/3.8.1/Python-3.8.1.tar.xz
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
-Patch3:         0003-Add-avx2-and-avx512-support.patch
+Patch3:         0001-AVX2-and-AVX512-support.patch
 Patch4:         0004-Build-avx2-and-avx512-versions-of-the-math-library.patch
 Patch5:         0005-pythonrun.c-telemetry-patch.patch
 Patch6:         0006-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
