@@ -1,4 +1,4 @@
-From b1ef89801be9e643c6fac137353c8b9d03c866e1 Mon Sep 17 00:00:00 2001
+From 728ab07c976b853eaccf5abfd00d186c880772bf Mon Sep 17 00:00:00 2001
 From: Guobing Chen <guobing.chen@intel.com>
 Date: Thu, 9 Jan 2020 11:24:23 +0800
 Subject: [PATCH] AVX2 and AVX512 support
@@ -10,23 +10,15 @@ usage is scikit-learn.
 
 Signed-off-by: Guobing Chen <guobing.chen@intel.com>
 ---
- Lib/distutils/unixccompiler.py | 68 ++++++++++++++++++++++++++++++++++
- Python/dynload_shlib.c         | 15 ++++++++
- 2 files changed, 83 insertions(+)
+ Lib/distutils/unixccompiler.py | 59 ++++++++++++++++++++++++++++++++++
+ Python/dynload_shlib.c         | 15 +++++++++
+ 2 files changed, 74 insertions(+)
 
 diff --git a/Lib/distutils/unixccompiler.py b/Lib/distutils/unixccompiler.py
-index d10a78d..b7e48b9 100644
+index d10a78d..0981e27 100644
 --- a/Lib/distutils/unixccompiler.py
 +++ b/Lib/distutils/unixccompiler.py
-@@ -14,6 +14,7 @@ the "typical" Unix-style command-line C compiler:
- """
- 
- import os, sys, re
-+import tempfile
- 
- from distutils import sysconfig
- from distutils.dep_util import newer
-@@ -116,6 +117,16 @@ class UnixCCompiler(CCompiler):
+@@ -116,6 +116,16 @@ class UnixCCompiler(CCompiler):
          try:
              self.spawn(compiler_so + cc_args + [src, '-o', obj] +
                         extra_postargs)
@@ -43,7 +35,7 @@ index d10a78d..b7e48b9 100644
          except DistutilsExecError as msg:
              raise CompileError(msg)
  
-@@ -157,6 +168,45 @@ class UnixCCompiler(CCompiler):
+@@ -157,6 +167,37 @@ class UnixCCompiler(CCompiler):
  
          lib_opts = gen_lib_options(self, library_dirs, runtime_library_dirs,
                                     libraries)
@@ -55,14 +47,10 @@ index d10a78d..b7e48b9 100644
 +                # Try with gcc to check whether there are avx2/avx512 lib versions.
 +                # subprocess or os.popen() cannot be used as not support in python
 +                # self-boost building.
-+                lib_avx2_str = tempfile.mkstemp(suffix='gcc-avx-test-tmp.log')
-+                os.system('gcc ' + ' '.join(lib_opts_avx2) + ' >& ' + lib_avx2_str)
-+                output = open(lib_avx2_str, 'r').read()
-+                os.remove(lib_avx2_str)
-+                if output is not None:
-+                    if output.find('cannot find ' + element_tmp) != -1:
-+                        lib_opts_avx2.pop()
-+                        lib_opts_avx2.append(element)
++                ret = os.system(f"echo 'main() {}' | gcc -o /dev/null {element_tmp} -xc -")
++                if ret:
++                    lib_opts_avx2.pop()
++                    lib_opts_avx2.append(element)
 +            else:
 +                lib_opts_avx2.append(element)
 +
@@ -74,14 +62,10 @@ index d10a78d..b7e48b9 100644
 +                # try with gcc to check whether there are avx2/avx512 lib versions
 +                # subprocess or os.popen() cannot be used as not support in python
 +                # self-boost building.
-+                lib_avx512_str = tempfile.mkstemp(suffix='gcc-avx-test-tmp.log')
-+                os.system('gcc ' + ' '.join(lib_opts_avx512) + ' >& ' + lib_avx512_str)
-+                output = open(lib_avx512_str, 'r').read()
-+                os.remove(lib_avx512_str)
-+                if output is not None:
-+                    if output.find('cannot find ' + element_tmp) != -1:
-+                        lib_opts_avx512.pop()
-+                        lib_opts_avx512.append(element)
++                ret = os.system(f"echo 'main() {}' | gcc -o /dev/null {element_tmp} -xc -")
++                if ret:
++                    lib_opts_avx512.pop()
++                    lib_opts_avx512.append(element)
 +            else:
 +                lib_opts_avx512.append(element)
 +
@@ -89,7 +73,7 @@ index d10a78d..b7e48b9 100644
          if not isinstance(output_dir, (str, type(None))):
              raise TypeError("'output_dir' must be a string or None")
          if output_dir is not None:
-@@ -202,6 +252,24 @@ class UnixCCompiler(CCompiler):
+@@ -202,6 +243,24 @@ class UnixCCompiler(CCompiler):
                      linker = _osx_support.compiler_fixup(linker, ld_args)
  
                  self.spawn(linker + ld_args)
