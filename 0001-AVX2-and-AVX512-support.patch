@@ -1,4 +1,4 @@
-From 703d4ec737d32f030279c8c45d8bc9a521b1835c Mon Sep 17 00:00:00 2001
+From b1ef89801be9e643c6fac137353c8b9d03c866e1 Mon Sep 17 00:00:00 2001
 From: Guobing Chen <guobing.chen@intel.com>
 Date: Thu, 9 Jan 2020 11:24:23 +0800
 Subject: [PATCH] AVX2 and AVX512 support
@@ -15,14 +15,14 @@ Signed-off-by: Guobing Chen <guobing.chen@intel.com>
  2 files changed, 83 insertions(+)
 
 diff --git a/Lib/distutils/unixccompiler.py b/Lib/distutils/unixccompiler.py
-index d10a78d..0a2cc6e 100644
+index d10a78d..b7e48b9 100644
 --- a/Lib/distutils/unixccompiler.py
 +++ b/Lib/distutils/unixccompiler.py
 @@ -14,6 +14,7 @@ the "typical" Unix-style command-line C compiler:
  """
  
  import os, sys, re
-+import time
++import tempfile
  
  from distutils import sysconfig
  from distutils.dep_util import newer
@@ -55,7 +55,7 @@ index d10a78d..0a2cc6e 100644
 +                # Try with gcc to check whether there are avx2/avx512 lib versions.
 +                # subprocess or os.popen() cannot be used as not support in python
 +                # self-boost building.
-+                lib_avx2_str = element_tmp[2:] + str(time.time()) +'_tmp.log'
++                lib_avx2_str = tempfile.mkstemp(suffix='gcc-avx-test-tmp.log')
 +                os.system('gcc ' + ' '.join(lib_opts_avx2) + ' >& ' + lib_avx2_str)
 +                output = open(lib_avx2_str, 'r').read()
 +                os.remove(lib_avx2_str)
@@ -74,7 +74,7 @@ index d10a78d..0a2cc6e 100644
 +                # try with gcc to check whether there are avx2/avx512 lib versions
 +                # subprocess or os.popen() cannot be used as not support in python
 +                # self-boost building.
-+                lib_avx512_str = element_tmp[2:] + str(time.time()) +'_tmp.log'
++                lib_avx512_str = tempfile.mkstemp(suffix='gcc-avx-test-tmp.log')
 +                os.system('gcc ' + ' '.join(lib_opts_avx512) + ' >& ' + lib_avx512_str)
 +                output = open(lib_avx512_str, 'r').read()
 +                os.remove(lib_avx512_str)
@@ -148,5 +148,5 @@ index c51f97a..0de842f 100644
      if (handle == NULL) {
          PyObject *mod_name;
 -- 
-2.24.1
+2.25.0
 
