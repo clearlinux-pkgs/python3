@@ -1,4 +1,4 @@
-From 728ab07c976b853eaccf5abfd00d186c880772bf Mon Sep 17 00:00:00 2001
+From e2f4b790a8ddba072d01843ce115ae97d3d4bb2d Mon Sep 17 00:00:00 2001
 From: Guobing Chen <guobing.chen@intel.com>
 Date: Thu, 9 Jan 2020 11:24:23 +0800
 Subject: [PATCH] AVX2 and AVX512 support
@@ -15,7 +15,7 @@ Signed-off-by: Guobing Chen <guobing.chen@intel.com>
  2 files changed, 74 insertions(+)
 
 diff --git a/Lib/distutils/unixccompiler.py b/Lib/distutils/unixccompiler.py
-index d10a78d..0981e27 100644
+index d10a78d..c0f653e 100644
 --- a/Lib/distutils/unixccompiler.py
 +++ b/Lib/distutils/unixccompiler.py
 @@ -116,6 +116,16 @@ class UnixCCompiler(CCompiler):
@@ -47,7 +47,7 @@ index d10a78d..0981e27 100644
 +                # Try with gcc to check whether there are avx2/avx512 lib versions.
 +                # subprocess or os.popen() cannot be used as not support in python
 +                # self-boost building.
-+                ret = os.system(f"echo 'main() {}' | gcc -o /dev/null {element_tmp} -xc -")
++                ret = os.system(f"echo 'main() {{}}' | gcc -o /dev/null {element_tmp} -xc -")
 +                if ret:
 +                    lib_opts_avx2.pop()
 +                    lib_opts_avx2.append(element)
@@ -62,7 +62,7 @@ index d10a78d..0981e27 100644
 +                # try with gcc to check whether there are avx2/avx512 lib versions
 +                # subprocess or os.popen() cannot be used as not support in python
 +                # self-boost building.
-+                ret = os.system(f"echo 'main() {}' | gcc -o /dev/null {element_tmp} -xc -")
++                ret = os.system(f"echo 'main() {{}}' | gcc -o /dev/null {element_tmp} -xc -")
 +                if ret:
 +                    lib_opts_avx512.pop()
 +                    lib_opts_avx512.append(element)
