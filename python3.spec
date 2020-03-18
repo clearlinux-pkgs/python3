@@ -173,6 +173,8 @@ rm %{buildroot}/usr/lib/libpython3.8.a
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 
+sed -i -e 's/LIBS=" -lcrypt -lpthread -ldl  -lutil -lm $SYSLIBS"/LIBS=" -lcrypt -lpthread -ldl  -lutil -lm $SYSLIBS -lpython3.8/' %{buildroot}/usr/bin/python3.8-config
+
 
 # temporary test disable during python minor version update
 # check
