@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.8.2
-Release:        213
+Release:        214
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -14,7 +14,7 @@ Patch4:         0004-Build-avx2-and-avx512-versions-of-the-math-library.patch
 Patch5:         0005-pythonrun.c-telemetry-patch.patch
 Patch6:         0006-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
 Patch7:         0007-Force-config-to-always-be-shared.patch
-
+Patch8:         CVE-2020-8492.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -114,6 +114,7 @@ The Python Programming Language.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 pushd ..
 cp -a Python-%{version} Python-avx2
