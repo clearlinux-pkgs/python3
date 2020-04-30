@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.8.2
-Release:        214
+Release:        215
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -69,7 +69,8 @@ Summary:        The Python Programming Language
 Group:          devel/python
 Provides:       python3-modules
 Provides:       /bin/python3
-
+# FIXME: Remove this after no other package depends on 'typing'.
+Provides:       typing
 Requires:  	setuptools-python3
 Requires:  	setuptools-bin
 
