@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.8.2
-Release:        215
+Version:        3.8.3
+Release:        216
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.8.2/Python-3.8.2.tar.xz
+Source0:        https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tar.xz
 Source1:        usrlocal.pth
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
@@ -14,7 +14,6 @@ Patch4:         0004-Build-avx2-and-avx512-versions-of-the-math-library.patch
 Patch5:         0005-pythonrun.c-telemetry-patch.patch
 Patch6:         0006-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
 Patch7:         0007-Force-config-to-always-be-shared.patch
-Patch8:         CVE-2020-8492.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -69,8 +68,6 @@ Summary:        The Python Programming Language
 Group:          devel/python
 Provides:       python3-modules
 Provides:       /bin/python3
-# FIXME: Remove this after no other package depends on 'typing'.
-Provides:       typing
 Requires:  	setuptools-python3
 Requires:  	setuptools-bin
 
@@ -115,7 +112,6 @@ The Python Programming Language.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 pushd ..
 cp -a Python-%{version} Python-avx2
@@ -171,9 +167,9 @@ rm %{buildroot}/usr/lib/libpython3.8.a
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 
-# temporary test disable during python minor version update
+# NOTE: test timeouts are still occurring, so do not enable by default
 # check
-# export LANG=C
+# export LANG=C.UTF-8
 # LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
 
@@ -207,7 +203,7 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 %exclude /usr/lib/python3.8/test/
 %exclude /usr/lib/python3.8/tkinter
 %exclude /usr/lib/python3.8/lib-dynload/_tkinter.cpython-38-x86_64-linux-gnu.*
-%{_mandir}/man1/*
+/usr/share/man/man1/*
 
 %files dev
 /usr/include/python3.8/*.h
