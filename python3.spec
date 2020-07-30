@@ -68,8 +68,8 @@ Summary:        The Python Programming Language
 Group:          devel/python
 Provides:       python3-modules
 Provides:       /bin/python3
-Requires:  	setuptools-python3
-Requires:  	setuptools-bin
+Requires:       setuptools-python3
+Requires:       setuptools-bin
 
 
 # evil evil compatibility hack for bootstrap purposes
@@ -84,7 +84,7 @@ Summary:        The Python Programming Language
 Group:          devel
 Requires:       python3-lib
 Requires:       python3-core
-Requires:	usrbinpython
+Requires:       usrbinpython
 
 %package tcl
 License:        Python-2.0
@@ -92,7 +92,7 @@ Summary:        The Python Programming Language
 Group:          devel
 Requires:       python3-lib
 Requires:       python3-core
-Requires:	usrbinpython
+Requires:       usrbinpython
 
 %define python_configure_flags  LDFLAGS="-Wa,-mbranches-within-32B-boundaries"  --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto=8 --with-computed-gotos --without-ensurepip
 
