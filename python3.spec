@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.8.6
+Version:        3.9.1
 Release:        218
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.8.6/Python-3.8.6.tar.xz
+Source0:        https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tar.xz
 Source1:        usrlocal.pth
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
@@ -159,10 +159,10 @@ make clean
 make profile-opt %{?_smp_mflags}
 %make_install
 # Add /usr/local/lib/python*/site-packages to the python path
-install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.8/site-packages/usrlocal.pth
+install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.9/site-packages/usrlocal.pth
 # static library archives need to be writable for strip to work
-install -m 0755 %{buildroot}/usr/lib/libpython3.8.a %{buildroot}/usr/lib64/
-rm %{buildroot}/usr/lib/libpython3.8.a
+install -m 0755 %{buildroot}/usr/lib/libpython3.9.a %{buildroot}/usr/lib64/
+rm %{buildroot}/usr/lib/libpython3.9.a
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
@@ -176,49 +176,40 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 %files
 
 %files lib
-/usr/lib64/haswell/libpython3.8.so.1.0
-/usr/lib64/libpython3.8.so.1.0
+/usr/lib64/haswell/libpython3.9.so.1.0
+/usr/lib64/libpython3.9.so.1.0
 
 %files staticdev
-/usr/lib/python3.8/config-3.8-x86_64-linux-gnu/libpython3.8.a
-/usr/lib64/libpython3.8.a
+/usr/lib/python3.9/config-3.9-x86_64-linux-gnu/libpython3.9.a
+/usr/lib64/libpython3.9.a
 
 %files core
 /usr/bin/2to3
-/usr/bin/2to3-3.8
-#/usr/bin/easy_install-3.8
-%exclude /usr/bin/pip3
-%exclude /usr/bin/pip3.8
+/usr/bin/2to3-3.9
+#/usr/bin/easy_install-3.9
 /usr/bin/pydoc3
-/usr/bin/pydoc3.8
+/usr/bin/pydoc3.9
 /usr/bin/python3
 /usr/bin/python3-config
-/usr/bin/python3.8
-/usr/bin/python3.8-config
-/usr/lib/python3.8
-%exclude /usr/lib/python3.8/config-3.8-x86_64-linux-gnu/libpython3.8.a
-%exclude /usr/lib/python3.8/distutils/command/*.exe
-%exclude /usr/lib/python3.8/site-packages/pip
-%exclude /usr/lib/python3.8/site-packages/pip-19.2.3.dist-info
-%exclude /usr/lib/python3.8/test/
-%exclude /usr/lib/python3.8/tkinter
-%exclude /usr/lib/python3.8/lib-dynload/_tkinter.cpython-38-x86_64-linux-gnu.*
+/usr/bin/python3.9
+/usr/bin/python3.9-config
+/usr/lib/python3.9
 /usr/share/man/man1/*
 
 %files dev
-/usr/include/python3.8/*.h
-/usr/include/python3.8/cpython/*.h
-/usr/include/python3.8/internal/*.h
-/usr/lib64/haswell/libpython3.8.so
-/usr/lib64/libpython3.8.so
+/usr/include/python3.9/*.h
+/usr/include/python3.9/cpython/*.h
+/usr/include/python3.9/internal/*.h
+/usr/lib64/haswell/libpython3.9.so
+/usr/lib64/libpython3.9.so
 /usr/lib64/libpython3.so
-/usr/lib64/pkgconfig/python-3.8.pc
-/usr/lib64/pkgconfig/python-3.8-embed.pc
+/usr/lib64/pkgconfig/python-3.9.pc
+/usr/lib64/pkgconfig/python-3.9-embed.pc
 /usr/lib64/pkgconfig/python3.pc
 /usr/lib64/pkgconfig/python3-embed.pc
 
 %files tcl
 /usr/bin/idle3
-/usr/bin/idle3.8
-/usr/lib/python3.8/tkinter
-/usr/lib/python3.8/lib-dynload/_tkinter.cpython-38-x86_64-linux-gnu.*
+/usr/bin/idle3.9
+/usr/lib/python3.9/tkinter
+/usr/lib/python3.9/lib-dynload/_tkinter.cpython-39-x86_64-linux-gnu.*
