@@ -1,7 +1,7 @@
-From 6395d36ded756cf7747062ce57876a24662e1fa7 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Thu, 31 Oct 2019 14:16:48 -0700
-Subject: [PATCH 5/6] pythonrun.c: telemetry patch
+Subject: [PATCH] pythonrun.c: telemetry patch
 
 If the telemetry library is available, the patch taps into Python unhandled exception code
 and creates a telemetry probe payload. The payload is typically a traceback, identical
@@ -30,10 +30,10 @@ Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
  1 file changed, 274 insertions(+)
 
 diff --git a/Python/pythonrun.c b/Python/pythonrun.c
-index f1d946a..1a0ee81 100644
+index 70748dc..c7e23ce 100644
 --- a/Python/pythonrun.c
 +++ b/Python/pythonrun.c
-@@ -660,10 +660,281 @@ handle_system_exit(void)
+@@ -698,10 +698,281 @@ handle_system_exit(void)
  }
  
  
@@ -315,16 +315,16 @@ index f1d946a..1a0ee81 100644
  
      handle_system_exit();
  
-@@ -694,6 +965,8 @@ _PyErr_PrintEx(PyThreadState *tstate, int set_sys_last_vars)
+@@ -732,6 +1003,8 @@ _PyErr_PrintEx(PyThreadState *tstate, int set_sys_last_vars)
              _PyErr_Clear(tstate);
          }
      }
 +
 +    fd_telem = telemetry_file_open();
      hook = _PySys_GetObjectId(&PyId_excepthook);
-     if (hook) {
-         PyObject* stack[3];
-@@ -740,6 +1013,7 @@ done:
+     if (_PySys_Audit(tstate, "sys.excepthook", "OOOO", hook ? hook : Py_None,
+                      exception, v, tb) < 0) {
+@@ -786,6 +1059,7 @@ done:
      Py_XDECREF(exception);
      Py_XDECREF(v);
      Py_XDECREF(tb);
@@ -332,6 +332,3 @@ index f1d946a..1a0ee81 100644
  }
  
  void
--- 
-2.23.0
-

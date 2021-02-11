@@ -1,4 +1,4 @@
-From 8cc2a5c3934c4bffa9ea7c08da9bcbf2825cd16a Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Wed, 20 Nov 2019 12:43:35 -0800
 Subject: [PATCH] Force config to always be shared
@@ -13,7 +13,7 @@ force shared in the config scripts.
  2 files changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/Misc/python-config.in b/Misc/python-config.in
-index 727c4a8..4b16867 100644
+index ebd99da..28fb80f 100644
 --- a/Misc/python-config.in
 +++ b/Misc/python-config.in
 @@ -57,11 +57,6 @@ for opt in opt_flags:
@@ -41,6 +41,3 @@ index 2602fe2..f386ff8 100644
  LDVERSION="@LDVERSION@"
  LIBDEST=${prefix_real}/lib/python${VERSION}
  LIBPL=$(echo "@LIBPL@" | sed "s#$prefix#$prefix_real#")
--- 
-2.24.0
-

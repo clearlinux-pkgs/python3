@@ -1,17 +1,21 @@
-From 64eab161525c0a1172766e1cfd9c52e1d2995d7c Mon Sep 17 00:00:00 2001
-From: William Douglas <william.douglas@intel.com>
-Date: Wed, 30 Oct 2019 15:46:14 -0700
-Subject: [PATCH 3/6] Add avx2 and avx512 support
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Guobing Chen <guobing.chen@intel.com>
+Date: Thu, 9 Jan 2020 11:24:23 +0800
+Subject: [PATCH] AVX2 and AVX512 support
 
-Enable support for python avx2 and avx512 library creation and
-loading.
+Merged the original AVX2/AVX512 support patch together with fix to
+enable using AVX version static libs when linking binaries. The
+static lib should be libname-avx2 or libname-avx512. An example
+usage is scikit-learn.
+
+Signed-off-by: Guobing Chen <guobing.chen@intel.com>
 ---
- Lib/distutils/unixccompiler.py | 28 ++++++++++++++++++++++++++++
- Python/dynload_shlib.c         | 15 +++++++++++++++
- 2 files changed, 43 insertions(+)
+ Lib/distutils/unixccompiler.py | 59 ++++++++++++++++++++++++++++++++++
+ Python/dynload_shlib.c         | 15 +++++++++
+ 2 files changed, 74 insertions(+)
 
 diff --git a/Lib/distutils/unixccompiler.py b/Lib/distutils/unixccompiler.py
-index d10a78d..13dc058 100644
+index f0792de..97838fa 100644
 --- a/Lib/distutils/unixccompiler.py
 +++ b/Lib/distutils/unixccompiler.py
 @@ -116,6 +116,16 @@ class UnixCCompiler(CCompiler):
@@ -31,12 +35,50 @@ index d10a78d..13dc058 100644
          except DistutilsExecError as msg:
              raise CompileError(msg)
  
-@@ -202,6 +212,24 @@ class UnixCCompiler(CCompiler):
+@@ -157,6 +167,37 @@ class UnixCCompiler(CCompiler):
+ 
+         lib_opts = gen_lib_options(self, library_dirs, runtime_library_dirs,
+                                    libraries)
++        lib_opts_avx2 = []
++        for element in lib_opts:
++            if element.startswith('-l'):
++                element_tmp = element + '-avx2'
++                lib_opts_avx2.append(element_tmp)
++                # Try with gcc to check whether there are avx2/avx512 lib versions.
++                # subprocess or os.popen() cannot be used as not support in python
++                # self-boost building.
++                ret = os.system(f"echo 'main() {{}}' | gcc -o /dev/null {element_tmp} -xc -")
++                if ret:
++                    lib_opts_avx2.pop()
++                    lib_opts_avx2.append(element)
++            else:
++                lib_opts_avx2.append(element)
++
++        lib_opts_avx512 = []
++        for element in lib_opts:
++            if element.startswith('-l'):
++                element_tmp = element + '-avx512'
++                lib_opts_avx512.append(element_tmp)
++                # try with gcc to check whether there are avx2/avx512 lib versions
++                # subprocess or os.popen() cannot be used as not support in python
++                # self-boost building.
++                ret = os.system(f"echo 'main() {{}}' | gcc -o /dev/null {element_tmp} -xc -")
++                if ret:
++                    lib_opts_avx512.pop()
++                    lib_opts_avx512.append(element)
++            else:
++                lib_opts_avx512.append(element)
++
++
+         if not isinstance(output_dir, (str, type(None))):
+             raise TypeError("'output_dir' must be a string or None")
+         if output_dir is not None:
+@@ -202,6 +243,24 @@ class UnixCCompiler(CCompiler):
                      linker = _osx_support.compiler_fixup(linker, ld_args)
  
                  self.spawn(linker + ld_args)
 +                ld_args = ([obj + ".avx2" for obj in objects] + self.objects +
-+                       lib_opts + ['-o', output_filename + ".avx2"])
++                       lib_opts_avx2 + ['-o', output_filename + ".avx2"])
 +                if debug:
 +                    ld_args[:0] = ['-g']
 +                if extra_preargs:
@@ -45,7 +87,7 @@ index d10a78d..13dc058 100644
 +                    ld_args.extend(extra_postargs)
 +                self.spawn(linker + ld_args)
 +                ld_args = ([obj + ".avx512" for obj in objects] + self.objects +
-+                       lib_opts + ['-o', output_filename + ".avx512"])
++                       lib_opts_avx512 + ['-o', output_filename + ".avx512"])
 +                if debug:
 +                    ld_args[:0] = ['-g']
 +                if extra_preargs:
@@ -57,10 +99,10 @@ index d10a78d..13dc058 100644
                  raise LinkError(msg)
          else:
 diff --git a/Python/dynload_shlib.c b/Python/dynload_shlib.c
-index c51f97a..0de842f 100644
+index 2382889..5df13b7 100644
 --- a/Python/dynload_shlib.c
 +++ b/Python/dynload_shlib.c
-@@ -64,6 +64,8 @@ _PyImport_FindSharedFuncptr(const char *prefix,
+@@ -65,6 +65,8 @@ _PyImport_FindSharedFuncptr(const char *prefix,
      void *handle;
      char funcname[258];
      char pathbuf[260];
@@ -69,8 +111,8 @@ index c51f97a..0de842f 100644
      int dlopenflags=0;
  
      if (strchr(pathname, '/') == NULL) {
-@@ -97,6 +99,19 @@ _PyImport_FindSharedFuncptr(const char *prefix,
-     dlopenflags = _PyInterpreterState_Get()->dlopenflags;
+@@ -98,6 +100,19 @@ _PyImport_FindSharedFuncptr(const char *prefix,
+     dlopenflags = _PyInterpreterState_GET()->dlopenflags;
  
      handle = dlopen(pathname, dlopenflags);
 +    pathname2 = malloc(strlen(pathname) + strlen(".avx2") + 1);
@@ -89,6 +131,3 @@ index c51f97a..0de842f 100644
  
      if (handle == NULL) {
          PyObject *mod_name;
--- 
-2.23.0
-

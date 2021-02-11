@@ -1,7 +1,7 @@
-From 4a5fc65e856eda41c42838e06fec6bd76f846ab7 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Thu, 7 Jun 2018 21:33:45 +0000
-Subject: [PATCH 2/6] Skip tests TODO fix skips
+Subject: [PATCH] Skip tests TODO fix skips
 
 These tests had been failing years ago and probably haven't been
 rechecked to see if that is still the case. For now continue to put
@@ -52,6 +52,3 @@ index 236755d..4b40aad 100644
      def test_sysconfig_compiler_vars(self):
          # On OS X, binary installers support extension module building on
          # various levels of the operating system with differing Xcode
--- 
-2.23.0
-

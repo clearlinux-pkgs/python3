@@ -1,17 +1,17 @@
-From 3ea3f6bfd91d62a7987deac71f1e876b372637c1 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Tue, 12 Jun 2018 19:00:23 +0000
-Subject: [PATCH 4/6] Build avx2 and avx512 versions of the math library
+Subject: [PATCH] Build avx2 and avx512 versions of the math library
 
 ---
  Makefile.pre.in | 2 ++
  1 file changed, 2 insertions(+)
 
 diff --git a/Makefile.pre.in b/Makefile.pre.in
-index 502317a..bfaef46 100644
+index f128444..d14d07c 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -587,6 +587,8 @@ pybuilddir.txt: $(BUILDPYTHON)
+@@ -611,6 +611,8 @@ pybuilddir.txt: $(BUILDPYTHON)
  # This is shared by the math and cmath modules
  Modules/_math.o: Modules/_math.c Modules/_math.h
  	$(CC) -c $(CCSHARED) $(PY_CORE_CFLAGS) -o $@ $<
@@ -20,6 +20,3 @@ index 502317a..bfaef46 100644
  
  # blake2s is auto-generated from blake2b
  $(srcdir)/Modules/_blake2/blake2s_impl.c: $(srcdir)/Modules/_blake2/blake2b_impl.c $(srcdir)/Modules/_blake2/blake2b2s.py
--- 
-2.23.0
-
