@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.9.1
+Version:        3.9.2
 Release:        222
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tar.xz
+Source0:        https://www.python.org/ftp/python/3.9.2/Python-3.9.2.tar.xz
 Source1:        usrlocal.pth
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
@@ -14,7 +14,6 @@ Patch4:         0004-Build-avx2-and-avx512-versions-of-the-math-library.patch
 Patch5:         0005-pythonrun.c-telemetry-patch.patch
 Patch6:         0006-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
 Patch7:         0007-Force-config-to-always-be-shared.patch
-Patch8:         CVE-2021-3177.patch
 
 BuildRequires:  bzip2
 BuildRequires:  db
@@ -113,7 +112,6 @@ The Python Programming Language.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 pushd ..
 cp -a Python-%{version} Python-avx2
