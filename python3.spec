@@ -69,7 +69,6 @@ Group:          devel/python
 Provides:       python3-modules
 Provides:       /bin/python3
 Requires:       setuptools-python3
-Requires:       setuptools-bin
 
 
 # evil evil compatibility hack for bootstrap purposes
