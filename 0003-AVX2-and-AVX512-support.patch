@@ -24,12 +24,12 @@ index f0792de..97838fa 100644
                         extra_postargs)
 +            self.spawn(compiler_so + cc_args+ ["-march=haswell", "-O3",
 +                                               "-fno-semantic-interposition",
-+                                               "-ffat-lto-objects",
++                                               "-ffat-lto-objects", "-Wa,-mbranches-within-32B-boundaries",
 +                                               "-flto=4"] +
 +                       [src, '-o', obj + ".avx2"] + extra_postargs)
 +            self.spawn(compiler_so + cc_args+ ["-march=skylake-avx512", "-O3",
 +                                               "-fno-semantic-interposition",
-+                                               "-ffat-lto-objects", "-flto=4",
++                                               "-ffat-lto-objects", "-flto=4", "-Wa,-mbranches-within-32B-boundaries"
 +                                               "-mprefer-vector-width=256"] +
 +                       [src, '-o', obj + ".avx512"] + extra_postargs)
          except DistutilsExecError as msg:
