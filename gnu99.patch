@@ -1,0 +1,40 @@
+--- Python-3.9.6/configure~	2021-06-28 08:26:18.000000000 +0000
++++ Python-3.9.6/configure	2021-07-15 22:29:10.227887228 +0000
+@@ -6967,7 +6967,7 @@
+ # tweak BASECFLAGS based on compiler and platform
+ case $GCC in
+ yes)
+-    CFLAGS_NODIST="$CFLAGS_NODIST -std=c99"
++    CFLAGS_NODIST="$CFLAGS_NODIST -std=gnu99"
+ 
+     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -Wextra" >&5
+ $as_echo_n "checking for -Wextra... " >&6; }
+@@ -8242,7 +8242,7 @@
+ # bluetooth/bluetooth.h has been known to not compile with -std=c99.
+ # http://permalink.gmane.org/gmane.linux.bluez.kernel/22294
+ SAVE_CFLAGS=$CFLAGS
+-CFLAGS="-std=c99 $CFLAGS"
++CFLAGS="-std=gnu99 $CFLAGS"
+ for ac_header in bluetooth/bluetooth.h
+ do :
+   ac_fn_c_check_header_mongrel "$LINENO" "bluetooth/bluetooth.h" "ac_cv_header_bluetooth_bluetooth_h" "$ac_includes_default"
+--- Python-3.9.6/configure.ac~	2021-06-28 08:26:18.000000000 +0000
++++ Python-3.9.6/configure.ac	2021-07-15 22:29:35.505886876 +0000
+@@ -1606,7 +1606,7 @@
+ # tweak BASECFLAGS based on compiler and platform
+ case $GCC in
+ yes)
+-    CFLAGS_NODIST="$CFLAGS_NODIST -std=c99"
++    CFLAGS_NODIST="$CFLAGS_NODIST -std=gnu99"
+ 
+     AC_MSG_CHECKING(for -Wextra)
+      ac_save_cc="$CC"
+@@ -2228,7 +2228,7 @@
+ # bluetooth/bluetooth.h has been known to not compile with -std=c99.
+ # http://permalink.gmane.org/gmane.linux.bluez.kernel/22294
+ SAVE_CFLAGS=$CFLAGS
+-CFLAGS="-std=c99 $CFLAGS"
++CFLAGS="-std=gnu99 $CFLAGS"
+ AC_CHECK_HEADERS(bluetooth/bluetooth.h)
+ CFLAGS=$SAVE_CFLAGS
+ 
