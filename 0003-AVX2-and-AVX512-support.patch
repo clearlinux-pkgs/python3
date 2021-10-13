@@ -23,7 +23,7 @@ index f0792de..97838fa 100644
              self.spawn(compiler_so + cc_args + [src, '-o', obj] +
                         extra_postargs)
 +            self.spawn(compiler_so + cc_args+ ["-march=haswell", "-O3",
-+                                               "-fno-semantic-interposition",
++                                               "-fno-semantic-interposition", "-mno-vzeroupper", 
 +                                               "-ffat-lto-objects", "-Wa,-mbranches-within-32B-boundaries",
 +                                               "-flto=4"] +
 +                       [src, '-o', obj + ".avx2"] + extra_postargs)

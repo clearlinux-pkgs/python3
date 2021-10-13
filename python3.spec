@@ -126,44 +126,45 @@ export CFLAGS="$CFLAGS -O3"
 make %{?_smp_mflags}
 
 pushd ../Python-avx2
-export CFLAGS="$CFLAGS -march=haswell -mfma  "
-export CXXFLAGS="$CXXFLAGS -march=haswell -mfma"
-%configure %python_configure_flags --enable-shared --bindir=/usr/bin/haswell
+export CFLAGS="$CFLAGS -march=x86-64-v3 -mno-vzeroupper "
+export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 -mno-vzeroupper "
+%configure %python_configure_flags --enable-shared
 make %{?_smp_mflags}
 popd
 
 %install
 
 pushd ../Python-avx2
-%make_install
-
-mkdir -p %{buildroot}/usr/lib64/haswell
-mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/haswell/
-rm -rf %{buildroot}/usr/lib/*
-rm -rf %{buildroot}/usr/bin/*
+%make_install_v3
 popd
 
-
 %make_install
+mkdir -p  %{buildroot}/usr/lib64/  %{buildroot}-v3/usr/lib64/
 mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
+mv %{buildroot}-v3/usr/lib/libpython*.so* %{buildroot}-v3/usr/lib64/
 
 # --enable-optimizations does not work with --enable-shared
 # https://bugs.python.org/issue29712
-pushd ../Python-avx2
-make clean
-%configure %python_configure_flags --enable-optimizations
-make profile-opt %{?_smp_mflags}
-popd
 
 make clean
 %configure %python_configure_flags --enable-optimizations
 make profile-opt %{?_smp_mflags}
 %make_install
+
+pushd ../Python-avx2
+make clean
+export CFLAGS="$CFLAGS -march=x86-64-v3 -mno-vzeroupper "
+export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 -mno-vzeroupper "
+%configure %python_configure_flags --enable-optimizations
+make profile-opt %{?_smp_mflags}
+%make_install_v3
+popd
+
 # Add /usr/local/lib/python*/site-packages to the python path
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.9/site-packages/usrlocal.pth
 # static library archives need to be writable for strip to work
 install -m 0755 %{buildroot}/usr/lib/libpython3.9.a %{buildroot}/usr/lib64/
-rm %{buildroot}/usr/lib/libpython3.9.a
+rm %{buildroot}*/usr/lib/libpython3.9.a
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
@@ -173,12 +174,14 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 # export LANG=C.UTF-8
 # LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+
 
 %files
 
 %files lib
-/usr/lib64/haswell/libpython3.9.so.1.0
 /usr/lib64/libpython3.9.so.1.0
+/usr/share/clear/optimized-elf/lib*
 
 %files staticdev
 /usr/lib/python3.9/config-3.9-x86_64-linux-gnu/libpython3.9.a
@@ -196,12 +199,14 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 /usr/bin/python3.9-config
 /usr/lib/python3.9
 /usr/share/man/man1/*
+/usr/share/clear/optimized-elf/bin*
+/usr/share/clear/optimized-elf/other*
+/usr/share/clear/filemap/filemap-python3
 
 %files dev
 /usr/include/python3.9/*.h
 /usr/include/python3.9/cpython/*.h
 /usr/include/python3.9/internal/*.h
-/usr/lib64/haswell/libpython3.9.so
 /usr/lib64/libpython3.9.so
 /usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.9.pc
