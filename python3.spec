@@ -1,12 +1,13 @@
 Name:           python3
-Version:        3.9.7
+Version:        3.10.0
 Release:        236
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.9.7/Python-3.9.7.tar.xz
+Source0:        https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tar.xz
 Source1:        usrlocal.pth
+Patch0:		stable.patch
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
 Patch3:         0003-AVX2-and-AVX512-support.patch
@@ -105,6 +106,7 @@ The Python Programming Language.
 
 %prep
 %setup -q -n Python-%{version}
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -120,8 +122,11 @@ cd Python-avx2
 popd
 
 %build
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
 export LANG=C
-export CFLAGS="$CFLAGS -O3"
+export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition"
 %configure %python_configure_flags --enable-shared
 make %{?_smp_mflags}
 
@@ -133,6 +138,11 @@ make %{?_smp_mflags}
 popd
 
 %install
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition "
+
 
 pushd ../Python-avx2
 %make_install_v3
