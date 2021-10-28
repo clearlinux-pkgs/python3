@@ -40,6 +40,7 @@ BuildRequires:  pip
 Requires: python3-core
 Requires: python3-lib
 Requires: usrbinpython
+Requires: pip
 
 %define keepstatic 1
 %global __arch_install_post %{nil}
