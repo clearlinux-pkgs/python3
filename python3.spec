@@ -7,12 +7,10 @@ Url:            http://www.python.org
 Group:          devel/python
 Source0:        https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tar.xz
 Source1:        usrlocal.pth
-Patch0:		stable.patch
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
 Patch3:         0003-AVX2-and-AVX512-support.patch
 Patch4:         0004-Build-avx2-and-avx512-versions-of-the-math-library.patch
-Patch5:         0005-pythonrun.c-telemetry-patch.patch
 Patch6:         0006-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
 Patch7:         0007-Force-config-to-always-be-shared.patch
 Patch8:		gnu99.patch
@@ -106,12 +104,10 @@ The Python Programming Language.
 
 %prep
 %setup -q -n Python-%{version}
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
@@ -171,10 +167,10 @@ make profile-opt %{?_smp_mflags}
 popd
 
 # Add /usr/local/lib/python*/site-packages to the python path
-install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.9/site-packages/usrlocal.pth
+install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.10/site-packages/usrlocal.pth
 # static library archives need to be writable for strip to work
-install -m 0755 %{buildroot}/usr/lib/libpython3.9.a %{buildroot}/usr/lib64/
-rm %{buildroot}*/usr/lib/libpython3.9.a
+install -m 0755 %{buildroot}/usr/lib/libpython3.10.a %{buildroot}/usr/lib64/
+rm %{buildroot}*/usr/lib/libpython3.10.a
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
@@ -190,42 +186,42 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 %files
 
 %files lib
-/usr/lib64/libpython3.9.so.1.0
+/usr/lib64/libpython3.10.so.1.0
 /usr/share/clear/optimized-elf/lib*
 
 %files staticdev
-/usr/lib/python3.9/config-3.9-x86_64-linux-gnu/libpython3.9.a
-/usr/lib64/libpython3.9.a
+/usr/lib/python3.10/config-3.10-x86_64-linux-gnu/libpython3.10.a
+/usr/lib64/libpython3.10.a
 
 %files core
 /usr/bin/2to3
-/usr/bin/2to3-3.9
-#/usr/bin/easy_install-3.9
+/usr/bin/2to3-3.10
+#/usr/bin/easy_install-3.10
 /usr/bin/pydoc3
-/usr/bin/pydoc3.9
+/usr/bin/pydoc3.10
 /usr/bin/python3
 /usr/bin/python3-config
-/usr/bin/python3.9
-/usr/bin/python3.9-config
-/usr/lib/python3.9
+/usr/bin/python3.10
+/usr/bin/python3.10-config
+/usr/lib/python3.10
 /usr/share/man/man1/*
 /usr/share/clear/optimized-elf/bin*
 /usr/share/clear/optimized-elf/other*
 /usr/share/clear/filemap/filemap-python3
 
 %files dev
-/usr/include/python3.9/*.h
-/usr/include/python3.9/cpython/*.h
-/usr/include/python3.9/internal/*.h
-/usr/lib64/libpython3.9.so
+/usr/include/python3.10/*.h
+/usr/include/python3.10/cpython/*.h
+/usr/include/python3.10/internal/*.h
+/usr/lib64/libpython3.10.so
 /usr/lib64/libpython3.so
-/usr/lib64/pkgconfig/python-3.9.pc
-/usr/lib64/pkgconfig/python-3.9-embed.pc
+/usr/lib64/pkgconfig/python-3.10.pc
+/usr/lib64/pkgconfig/python-3.10-embed.pc
 /usr/lib64/pkgconfig/python3.pc
 /usr/lib64/pkgconfig/python3-embed.pc
 
 %files tcl
 /usr/bin/idle3
-/usr/bin/idle3.9
-/usr/lib/python3.9/tkinter
-/usr/lib/python3.9/lib-dynload/_tkinter.cpython-39-x86_64-linux-gnu.*
+/usr/bin/idle3.10
+/usr/lib/python3.10/tkinter
+/usr/lib/python3.10/lib-dynload/_tkinter.cpython-310-x86_64-linux-gnu.*
