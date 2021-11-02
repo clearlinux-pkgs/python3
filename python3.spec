@@ -72,8 +72,8 @@ Provides:       /bin/python3
 Requires:       setuptools-python3
 
 
-# evil evil compatibility hack for bootstrap purposes
-#Provides:       python(abi) = 3.7
+# evil evil compatibility hack for bootstrap purposes .. 3.10 sometimes get rounded to 3.1
+Provides:       python(abi) = 3.1
 
 %description core
 The Python Programming Language.
