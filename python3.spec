@@ -69,6 +69,7 @@ Summary:        The Python Programming Language
 Group:          devel/python
 Provides:       python3-modules
 Provides:       /bin/python3
+Provides:       pypi(enum34)
 Requires:       setuptools-python3
 
 
