@@ -69,7 +69,9 @@ Summary:        The Python Programming Language
 Group:          devel/python
 Provides:       python3-modules
 Provides:       /bin/python3
+# few fake provides for ease of integration with autospec
 Provides:       pypi(enum34)
+Provides:	pypi(pywin32)
 Requires:       setuptools-python3
 
 
