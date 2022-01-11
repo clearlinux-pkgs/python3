@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.10.1
-Release:        243
+Release:        244
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -128,13 +128,13 @@ export NM=gcc-nm
 export LANG=C
 export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition"
 %configure %python_configure_flags --enable-shared
-make %{?_smp_mflags}
+SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
 
 pushd ../Python-avx2
 export CFLAGS="$CFLAGS -march=x86-64-v3 -mno-vzeroupper "
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 -mno-vzeroupper "
 %configure %python_configure_flags --enable-shared
-make %{?_smp_mflags}
+SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
 popd
 
 %install
@@ -158,7 +158,7 @@ mv %{buildroot}-v3/usr/lib/libpython*.so* %{buildroot}-v3/usr/lib64/
 
 make clean
 %configure %python_configure_flags --enable-optimizations
-make profile-opt %{?_smp_mflags}
+SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
 %make_install
 
 pushd ../Python-avx2
@@ -166,7 +166,7 @@ make clean
 export CFLAGS="$CFLAGS -march=x86-64-v3 -mno-vzeroupper "
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 -mno-vzeroupper "
 %configure %python_configure_flags --enable-optimizations
-make profile-opt %{?_smp_mflags}
+SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
 %make_install_v3
 popd
 
