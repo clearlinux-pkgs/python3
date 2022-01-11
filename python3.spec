@@ -72,7 +72,7 @@ Provides:       /bin/python3
 # few fake provides for ease of integration with autospec
 Provides:       pypi(enum34)
 Provides:	pypi(pywin32)
-Requires:       setuptools-python3
+Requires:       pypi(setuptools)
 
 
 # evil evil compatibility hack for bootstrap purposes .. 3.10 sometimes get rounded to 3.1
