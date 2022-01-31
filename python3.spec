@@ -36,11 +36,11 @@ BuildRequires:  netbase
 BuildRequires:  tk-dev
 BuildRequires:  tcl-dev
 BuildRequires:  libX11-dev
-BuildRequires:  pip
+BuildRequires:  pypi-pip
 Requires: python3-core
 Requires: python3-lib
 Requires: usrbinpython
-Requires: pip
+Requires: pypi-pip
 
 %define keepstatic 1
 %global __arch_install_post %{nil}
