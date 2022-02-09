@@ -73,7 +73,7 @@ Provides:       /bin/python3
 Provides:       pypi(enum34)
 Provides:	pypi(pywin32)
 Provides:       pypi(typing)
-Provides:       pypi(typing_extensions)
+#Provides:       pypi(typing_extensions)
 Requires:       pypi(setuptools)
 
 
