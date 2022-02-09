@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.10.2
-Release:        247
+Release:        248
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            http://www.python.org
@@ -72,6 +72,7 @@ Provides:       /bin/python3
 # few fake provides for ease of integration with autospec
 Provides:       pypi(enum34)
 Provides:	pypi(pywin32)
+Provides:       pypi(typing)
 Requires:       pypi(setuptools)
 
 
