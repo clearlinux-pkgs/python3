@@ -11,7 +11,7 @@ diff --git a/Makefile.pre.in b/Makefile.pre.in
 index f128444..d14d07c 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -611,6 +611,8 @@ pybuilddir.txt: $(BUILDPYTHON)
+@@ -610,6 +610,8 @@ pybuilddir.txt: $(BUILDPYTHON)
  # This is shared by the math and cmath modules
  Modules/_math.o: Modules/_math.c Modules/_math.h
  	$(CC) -c $(CCSHARED) $(PY_CORE_CFLAGS) -o $@ $<

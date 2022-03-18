@@ -36,7 +36,7 @@ diff --git a/Lib/distutils/tests/test_sysconfig.py b/Lib/distutils/tests/test_sy
 index 236755d..4b40aad 100644
 --- a/Lib/distutils/tests/test_sysconfig.py
 +++ b/Lib/distutils/tests/test_sysconfig.py
-@@ -192,6 +192,7 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
+@@ -195,6 +195,7 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
                               'OTHER': 'foo'})
  
  
@@ -44,7 +44,7 @@ index 236755d..4b40aad 100644
      def test_sysconfig_module(self):
          import sysconfig as global_sysconfig
          self.assertEqual(global_sysconfig.get_config_var('CFLAGS'),
-@@ -201,6 +202,7 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
+@@ -204,6 +205,7 @@ class SysconfigTestCase(support.EnvironGuard, unittest.TestCase):
  
      @unittest.skipIf(sysconfig.get_config_var('CUSTOMIZED_OSX_COMPILER'),
                       'compiler flags customized')
