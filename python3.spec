@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.10.3
-Release:        254
+Version:        3.10.4
+Release:        255
 License:        Python-2.0
 Summary:        The Python Programming Language
-Url:            http://www.python.org
+Url:            https://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.10.3/Python-3.10.3.tar.xz
+Source0:        https://www.python.org/ftp/python/3.10.4/Python-3.10.4.tar.xz
 Source1:        usrlocal.pth
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
