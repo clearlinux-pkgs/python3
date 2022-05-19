@@ -9,8 +9,6 @@ Source0:        https://www.python.org/ftp/python/3.10.4/Python-3.10.4.tar.xz
 Source1:        usrlocal.pth
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
-Patch3:         0003-AVX2-and-AVX512-support.patch
-Patch4:         0004-Build-avx2-and-avx512-versions-of-the-math-library.patch
 Patch6:         0006-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
 Patch7:         0007-Force-config-to-always-be-shared.patch
 Patch8:		gnu99.patch
@@ -111,8 +109,6 @@ The Python Programming Language.
 %setup -q -n Python-%{version}
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
