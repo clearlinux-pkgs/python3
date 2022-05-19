@@ -23,7 +23,7 @@ index f0792de..97838fa 100644
              self.spawn(compiler_so + cc_args + [src, '-o', obj] +
                         extra_postargs)
 +            self.spawn(compiler_so + cc_args+ ["-march=haswell", "-O3",
-+                                               "-fno-semantic-interposition", "-mno-vzeroupper",
++                                               "-fno-semantic-interposition",
 +                                               "-ffat-lto-objects",
 +                                               "-flto=auto"] +
 +                       [src, '-o', obj + ".avx2"] + extra_postargs)
@@ -77,7 +77,7 @@ index f0792de..97838fa 100644
                      linker = _osx_support.compiler_fixup(linker, ld_args)
  
                  self.spawn(linker + ld_args)
-+                ld_args = ([obj + ".avx2" for obj in objects] + self.objects +
++                ld_args = ([(obj + ".avx2").replace(".s.avx2",".s") for obj in objects] + self.objects +
 +                       lib_opts_avx2 + ['-o', output_filename + ".avx2"])
 +                if debug:
 +                    ld_args[:0] = ['-g']
@@ -86,7 +86,7 @@ index f0792de..97838fa 100644
 +                if extra_postargs:
 +                    ld_args.extend(extra_postargs + ['-lgfortran'])
 +                self.spawn(linker + ld_args)
-+                ld_args = ([obj + ".avx512" for obj in objects] + self.objects +
++                ld_args = ([(obj + ".avx512").replace(".s.avx2","s") for obj in objects] + self.objects +
 +                       lib_opts_avx512 + ['-o', output_filename + ".avx512"])
 +                if debug:
 +                    ld_args[:0] = ['-g']
