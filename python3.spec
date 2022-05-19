@@ -132,8 +132,8 @@ export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition"
 SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
 
 pushd ../Python-avx2
-export CFLAGS="$CFLAGS -march=x86-64-v3 -mno-vzeroupper "
-export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 -mno-vzeroupper "
+export CFLAGS="$CFLAGS -march=x86-64-v3  "
+export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
 %configure %python_configure_flags --enable-shared
 SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
 popd
@@ -164,8 +164,8 @@ SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
 
 pushd ../Python-avx2
 make clean
-export CFLAGS="$CFLAGS -march=x86-64-v3 -mno-vzeroupper "
-export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 -mno-vzeroupper "
+export CFLAGS="$CFLAGS -march=x86-64-v3  "
+export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
 %configure %python_configure_flags --enable-optimizations
 SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
 %make_install_v3
