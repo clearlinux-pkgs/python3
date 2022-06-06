@@ -12,7 +12,7 @@ Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
  1 file changed, 10 deletions(-)
 
 diff --git a/Lib/test/test_socket.py b/Lib/test/test_socket.py
-index aefba4f..8f828cd 100755
+index 5c15648..014d529 100644
 --- a/Lib/test/test_socket.py
 +++ b/Lib/test/test_socket.py
 @@ -2257,16 +2257,6 @@ class RDSTest(ThreadedRDSSocketTest):
