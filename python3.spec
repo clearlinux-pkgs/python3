@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.10.5
-Release:        260
+Release:        261
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -181,14 +181,14 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 # export LANG=C.UTF-8
 # LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 
 %files
 
 %files lib
+/usr/lib64/glibc-hwcaps/x86-64-v3/libpython3.10.so.1.0
 /usr/lib64/libpython3.10.so.1.0
-/usr/share/clear/optimized-elf/lib*
 
 %files staticdev
 /usr/lib/python3.10/config-3.10-x86_64-linux-gnu/libpython3.10.a
@@ -214,6 +214,8 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 /usr/include/python3.10/*.h
 /usr/include/python3.10/cpython/*.h
 /usr/include/python3.10/internal/*.h
+/usr/lib64/glibc-hwcaps/x86-64-v3/libpython3.10.so
+/usr/lib64/glibc-hwcaps/x86-64-v3/libpython3.so
 /usr/lib64/libpython3.10.so
 /usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.10.pc
