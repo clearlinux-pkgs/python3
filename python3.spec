@@ -131,7 +131,7 @@ pushd ../Python-avx2
 export CFLAGS="$CFLAGS -march=x86-64-v3  "
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
 %configure %python_configure_flags --enable-shared
-SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
+SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags} profile-opt
 popd
 
 %install
@@ -149,6 +149,12 @@ popd
 mkdir -p  %{buildroot}/usr/lib64/  %{buildroot}-v3/usr/lib64/
 mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 mv %{buildroot}-v3/usr/lib/libpython*.so* %{buildroot}-v3/usr/lib64/
+
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export LANG=C
+export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition"
 
 # --enable-optimizations does not work with --enable-shared
 # https://bugs.python.org/issue29712
