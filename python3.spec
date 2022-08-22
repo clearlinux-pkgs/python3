@@ -131,7 +131,7 @@ pushd ../Python-avx2
 export CFLAGS="$CFLAGS -march=x86-64-v3  "
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
 %configure %python_configure_flags --enable-shared
-SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags} profile-opt
+SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags} 
 popd
 
 %install
