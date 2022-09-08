@@ -215,6 +215,9 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 /usr/share/clear/optimized-elf/bin*
 /usr/share/clear/optimized-elf/other*
 /usr/share/clear/filemap/filemap-python3
+%exclude /usr/lib/python3.10/lib-dynload/_tkinter.cpython-310-x86_64-linux-gnu.so
+%exclude /usr/lib/python3.10/tkinter
+%exclude /usr/lib/python3.10/config-3.10-x86_64-linux-gnu/libpython3.10.a
 
 %files dev
 /usr/include/python3.10/*.h
