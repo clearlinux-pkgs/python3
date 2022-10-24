@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.10.8
+Version:        3.11.0
 Release:        278
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.10.8/Python-3.10.8.tar.xz
+Source0:        https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tar.xz
 Source1:        usrlocal.pth
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
@@ -35,6 +35,7 @@ BuildRequires:  tk-dev
 BuildRequires:  tcl-dev
 BuildRequires:  libX11-dev
 BuildRequires:  pypi-pip
+BuildRequires:  util-linux-dev
 Requires: python3-core
 Requires: python3-lib
 Requires: usrbinpython
@@ -96,7 +97,7 @@ Requires:       python3-lib
 Requires:       python3-core
 Requires:       usrbinpython
 
-%define python_configure_flags --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto=8 --with-computed-gotos --without-ensurepip
+%define python_configure_flags --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto --with-computed-gotos --without-ensurepip
 
 
 %description dev
@@ -174,10 +175,10 @@ SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
 popd
 
 # Add /usr/local/lib/python*/site-packages to the python path
-install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.10/site-packages/usrlocal.pth
+install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.11/site-packages/usrlocal.pth
 # static library archives need to be writable for strip to work
-install -m 0755 %{buildroot}/usr/lib/libpython3.10.a %{buildroot}/usr/lib64/
-rm %{buildroot}*/usr/lib/libpython3.10.a
+install -m 0755 %{buildroot}/usr/lib/libpython3.11.a %{buildroot}/usr/lib64/
+rm %{buildroot}*/usr/lib/libpython3.11.a
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
@@ -193,47 +194,47 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 %files
 
 %files lib
-/usr/lib64/glibc-hwcaps/x86-64-v3/libpython3.10.so.1.0
-/usr/lib64/libpython3.10.so.1.0
+/usr/lib64/glibc-hwcaps/x86-64-v3/libpython3.11.so.1.0
+/usr/lib64/libpython3.11.so.1.0
 
 %files staticdev
-/usr/lib/python3.10/config-3.10-x86_64-linux-gnu/libpython3.10.a
-/usr/lib64/libpython3.10.a
+/usr/lib/python3.11/config-3.11-x86_64-linux-gnu/libpython3.11.a
+/usr/lib64/libpython3.11.a
 
 %files core
 /usr/bin/2to3
-/usr/bin/2to3-3.10
-#/usr/bin/easy_install-3.10
+/usr/bin/2to3-3.11
+#/usr/bin/easy_install-3.11
 /usr/bin/pydoc3
-/usr/bin/pydoc3.10
+/usr/bin/pydoc3.11
 /usr/bin/python3
 /usr/bin/python3-config
-/usr/bin/python3.10
-/usr/bin/python3.10-config
-/usr/lib/python3.10
+/usr/bin/python3.11
+/usr/bin/python3.11-config
+/usr/lib/python3.11
 /usr/share/man/man1/*
 /usr/share/clear/optimized-elf/bin*
 /usr/share/clear/optimized-elf/other*
 /usr/share/clear/filemap/filemap-python3
-%exclude /usr/lib/python3.10/lib-dynload/_tkinter.cpython-310-x86_64-linux-gnu.so
-%exclude /usr/lib/python3.10/tkinter
-%exclude /usr/lib/python3.10/config-3.10-x86_64-linux-gnu/libpython3.10.a
+%exclude /usr/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.so
+%exclude /usr/lib/python3.11/tkinter
+%exclude /usr/lib/python3.11/config-3.11-x86_64-linux-gnu/libpython3.11.a
 
 %files dev
-/usr/include/python3.10/*.h
-/usr/include/python3.10/cpython/*.h
-/usr/include/python3.10/internal/*.h
-/usr/lib64/glibc-hwcaps/x86-64-v3/libpython3.10.so
+/usr/include/python3.11/*.h
+/usr/include/python3.11/cpython/*.h
+/usr/include/python3.11/internal/*.h
+/usr/lib64/glibc-hwcaps/x86-64-v3/libpython3.11.so
 /usr/lib64/glibc-hwcaps/x86-64-v3/libpython3.so
-/usr/lib64/libpython3.10.so
+/usr/lib64/libpython3.11.so
 /usr/lib64/libpython3.so
-/usr/lib64/pkgconfig/python-3.10.pc
-/usr/lib64/pkgconfig/python-3.10-embed.pc
+/usr/lib64/pkgconfig/python-3.11.pc
+/usr/lib64/pkgconfig/python-3.11-embed.pc
 /usr/lib64/pkgconfig/python3.pc
 /usr/lib64/pkgconfig/python3-embed.pc
 
 %files tcl
 /usr/bin/idle3
-/usr/bin/idle3.10
-/usr/lib/python3.10/tkinter
-/usr/lib/python3.10/lib-dynload/_tkinter.cpython-310-x86_64-linux-gnu.*
+/usr/bin/idle3.11
+/usr/lib/python3.11/tkinter
+#/usr/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.*

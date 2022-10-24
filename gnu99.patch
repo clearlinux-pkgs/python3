@@ -1,17 +1,15 @@
-diff --git a/configure b/configure
-index 0cc86f9..4e93abe 100755
---- a/configure
-+++ b/configure
-@@ -7051,7 +7051,7 @@ UNIVERSAL_ARCH_FLAGS=
+--- Python-3.11.0/configure~	2022-10-24 12:53:39.000000000 +0000
++++ Python-3.11.0/configure	2022-10-24 15:39:36.227283936 +0000
+@@ -8066,7 +8066,7 @@
  # tweak BASECFLAGS based on compiler and platform
  case $GCC in
  yes)
--    CFLAGS_NODIST="$CFLAGS_NODIST -std=c99"
-+    CFLAGS_NODIST="$CFLAGS_NODIST -std=gnu99"
+-    CFLAGS_NODIST="$CFLAGS_NODIST -std=c11"
++    CFLAGS_NODIST="$CFLAGS_NODIST -std=gnu11"
  
-     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for -Wextra" >&5
- $as_echo_n "checking for -Wextra... " >&6; }
-@@ -8327,7 +8327,7 @@ fi
+ 
+ 
+@@ -9195,7 +9195,7 @@
  # bluetooth/bluetooth.h has been known to not compile with -std=c99.
  # http://permalink.gmane.org/gmane.linux.bluez.kernel/22294
  SAVE_CFLAGS=$CFLAGS
@@ -20,20 +18,18 @@ index 0cc86f9..4e93abe 100755
  for ac_header in bluetooth/bluetooth.h
  do :
    ac_fn_c_check_header_mongrel "$LINENO" "bluetooth/bluetooth.h" "ac_cv_header_bluetooth_bluetooth_h" "$ac_includes_default"
-diff --git a/configure.ac b/configure.ac
-index 547255f..7b1a965 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -1610,7 +1610,7 @@ AC_SUBST(UNIVERSAL_ARCH_FLAGS)
+--- Python-3.11.0/configure.ac~	2022-10-24 12:53:39.000000000 +0000
++++ Python-3.11.0/configure.ac	2022-10-24 15:41:50.686281651 +0000
+@@ -2157,7 +2157,7 @@
  # tweak BASECFLAGS based on compiler and platform
  case $GCC in
  yes)
--    CFLAGS_NODIST="$CFLAGS_NODIST -std=c99"
-+    CFLAGS_NODIST="$CFLAGS_NODIST -std=gnu99"
+-    CFLAGS_NODIST="$CFLAGS_NODIST -std=c11"
++    CFLAGS_NODIST="$CFLAGS_NODIST -std=gnu11"
  
-     AC_MSG_CHECKING(for -Wextra)
-      ac_save_cc="$CC"
-@@ -2233,7 +2233,7 @@ AC_HEADER_MAJOR
+     PY_CHECK_CC_WARNING([enable], [extra], [if we can add -Wextra])
+     AS_VAR_IF([ac_cv_enable_extra_warning], [yes],
+@@ -2643,7 +2643,7 @@
  # bluetooth/bluetooth.h has been known to not compile with -std=c99.
  # http://permalink.gmane.org/gmane.linux.bluez.kernel/22294
  SAVE_CFLAGS=$CFLAGS
