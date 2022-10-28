@@ -135,6 +135,11 @@ export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
 SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags} 
 popd
 
+%check
+## NOTE: test timeouts are still occurring, so do not enable by default
+#export LANG=C.UTF-8
+#LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
+
 %install
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -182,11 +187,6 @@ rm %{buildroot}*/usr/lib/libpython3.11.a
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
-
-# NOTE: test timeouts are still occurring, so do not enable by default
-# check
-# export LANG=C.UTF-8
-# LD_LIBRARY_PATH=`pwd` ./python -Wd -E -tt  Lib/test/regrtest.py -v -x test_asyncio test_uuid test_subprocess || :
 
 /usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
