@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.11.0
-Release:        279
+Release:        280
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -32,7 +32,10 @@ BuildRequires:  libffi-dev
 BuildRequires:  procps-ng-bin
 BuildRequires:  netbase
 BuildRequires:  tk-dev
+BuildRequires:  tk-extras
+BuildRequires:  tk-staticdev
 BuildRequires:  tcl-dev
+BuildRequires:  tcl-staticdev
 BuildRequires:  libX11-dev
 BuildRequires:  pypi-pip
 BuildRequires:  util-linux-dev
@@ -237,4 +240,4 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 /usr/bin/idle3
 /usr/bin/idle3.11
 /usr/lib/python3.11/tkinter
-#/usr/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.*
+/usr/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.*
