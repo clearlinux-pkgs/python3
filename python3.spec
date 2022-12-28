@@ -134,6 +134,7 @@ export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export LANG=C
 export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz"
+export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz"
 %configure %python_configure_flags --enable-shared
 SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
 
@@ -154,6 +155,8 @@ export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz "
+export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz "
+export LDFLAGS="$LDFLAGS -g1 -gz"
 
 
 pushd ../Python-avx2
