@@ -230,6 +230,9 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 %exclude /usr/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.so
 %exclude /usr/lib/python3.11/tkinter
 %exclude /usr/lib/python3.11/config-3.11-x86_64-linux-gnu/libpython3.11.a
+%exclude /V3/usr/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.so
+%exclude /V3/usr/lib/python3.11/tkinter
+%exclude /V3/usr/lib/python3.11/config-3.11-x86_64-linux-gnu/libpython3.11.a
 
 %files dev
 /usr/include/python3.11/*.h
@@ -249,3 +252,4 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 /usr/bin/idle3.11
 /usr/lib/python3.11/tkinter
 /usr/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.*
+/V3/usr/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.*
