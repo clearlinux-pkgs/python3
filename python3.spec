@@ -11,7 +11,6 @@ Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-Skip-tests-TODO-fix-skips.patch
 Patch6:         0006-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
 Patch7:         0007-Force-config-to-always-be-shared.patch
-Patch8:		gnu99.patch
 
 # Suppress stripping binaries
 %define __strip /bin/true
@@ -118,7 +117,6 @@ The Python Programming Language.
 %patch2 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 pushd ..
 cp -a Python-%{version} Python-avx2
