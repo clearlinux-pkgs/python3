@@ -201,7 +201,6 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 %files
 
 %files lib
-/V3/usr/lib64/libpython3.11.so.1.0
 /usr/lib64/libpython3.11.so.1.0
 
 %files staticdev
