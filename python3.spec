@@ -233,7 +233,6 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 /usr/include/python3.11/cpython/*.h
 /usr/include/python3.11/internal/*.h
 /V3//usr/lib64/libpython3.11.so
-/V3//usr/lib64/libpython3.so
 /usr/lib64/libpython3.11.so
 /usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.11.pc
