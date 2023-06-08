@@ -220,7 +220,6 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 /usr/bin/python3.11-config
 /usr/lib/python3.11
 /V3/usr/lib/python3.11
-/V3/usr/bin/python3
 /V3/usr/bin/python3.11
 /V3/usr/lib/python3.11/config-3.11-x86_64-linux-gnu/python.o
 
