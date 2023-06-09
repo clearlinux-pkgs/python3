@@ -202,6 +202,7 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 
 %files lib
 /usr/lib64/libpython3.11.so.1.0
+/V3/usr/lib64/libpython3.11.so.1.0
 
 %files staticdev
 /usr/lib/python3.11/config-3.11-x86_64-linux-gnu/libpython3.11.a
@@ -221,7 +222,6 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 /V3/usr/lib/python3.11
 /V3/usr/bin/python3.11
 /V3/usr/lib/python3.11/config-3.11-x86_64-linux-gnu/python.o
-/V3/usr/lib64/libpython3.11.so.1.0
 /V3/usr/lib64/libpython3.so
 /usr/share/man/man1/*
 %exclude /usr/lib/python3.11/lib-dynload/_tkinter.cpython-311-x86_64-linux-gnu.so
