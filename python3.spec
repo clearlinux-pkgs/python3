@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.11.5
-Release:        301
+Release:        302
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -113,10 +113,10 @@ The Python Programming Language.
 
 %prep
 %setup -q -n Python-%{version}
-%patch1 -p1
-%patch2 -p1
-%patch6 -p1
-%patch7 -p1
+%patch -P 1 -p1
+%patch -P 2 -p1
+%patch -P 6 -p1
+%patch -P 7 -p1
 
 pushd ..
 cp -a Python-%{version} Python-avx2
@@ -194,6 +194,9 @@ rm %{buildroot}*/usr/lib/libpython3.11.a
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
+
+# Post fixup for libdir in the .pc file
+sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.11-embed.pc
 
 /usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
