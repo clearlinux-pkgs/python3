@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.0
-Release:        303
+Release:        304
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -116,10 +116,10 @@ The Python Programming Language.
 %patch -P 2 -p1
 %patch -P 3 -p1
 
-# pushd ..
-# cp -a Python-%{version} Python-avx2
-# cd Python-avx2
-# popd
+pushd ..
+cp -a Python-%{version} Python-avx2
+cd Python-avx2
+popd
 
 %build
 export AR=gcc-ar
@@ -131,12 +131,12 @@ export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info 
 %configure %python_configure_flags --enable-shared
 SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
 
-# pushd ../Python-avx2
-# export CFLAGS="$CFLAGS -march=x86-64-v3  "
-# export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
-# %configure %python_configure_flags --enable-shared
-# SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags} 
-# popd
+pushd ../Python-avx2
+export CFLAGS="$CFLAGS -march=x86-64-v3  "
+export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
+%configure %python_configure_flags --enable-shared
+SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
+popd
 
 %install
 export AR=gcc-ar
@@ -147,14 +147,14 @@ export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info 
 export LDFLAGS="$LDFLAGS -g1 -gz"
 
 
-# pushd ../Python-avx2
-# %make_install_v3
-# popd
+pushd ../Python-avx2
+%make_install_v3
+popd
 
 %make_install
-# mkdir -p  %{buildroot}/usr/lib64/  %{buildroot}-v3/usr/lib64/
+mkdir -p  %{buildroot}/usr/lib64/  %{buildroot}-v3/usr/lib64/
 mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
-# mv %{buildroot}-v3/usr/lib/libpython*.so* %{buildroot}-v3/usr/lib64/
+mv %{buildroot}-v3/usr/lib/libpython*.so* %{buildroot}-v3/usr/lib64/
 
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -170,14 +170,14 @@ make clean
 SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
 %make_install
 
-# pushd ../Python-avx2
-# make clean
-# export CFLAGS="$CFLAGS -march=x86-64-v3  "
-# export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
-# %configure %python_configure_flags --enable-optimizations
-# SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
-# %make_install_v3
-# popd
+pushd ../Python-avx2
+make clean
+export CFLAGS="$CFLAGS -march=x86-64-v3  "
+export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
+%configure %python_configure_flags --enable-optimizations
+SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
+%make_install_v3
+popd
 
 # Add /usr/local/lib/python*/site-packages to the python path
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.12/site-packages/usrlocal.pth
@@ -191,14 +191,14 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 # Post fixup for libdir in the .pc file
 sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.12-embed.pc
 
-# /usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 
 %files
 
 %files lib
 /usr/lib64/libpython3.12.so.1.0
-# /V3/usr/lib64/libpython3.12.so.1.0
+/V3/usr/lib64/libpython3.12.so.1.0
 
 %files staticdev
 /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
@@ -214,9 +214,9 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/bin/python3.12
 /usr/bin/python3.12-config
 /usr/lib/python3.12
-# /V3/usr/lib/python3.12
-# /V3/usr/bin/python3.12
-# /V3/usr/lib/python3.12/config-3.12-x86_64-linux-gnu/python.o
+/V3/usr/lib/python3.12
+/V3/usr/bin/python3.12
+/V3/usr/lib/python3.12/config-3.12-x86_64-linux-gnu/python.o
 /usr/share/man/man1/*
 %exclude /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
 %exclude /usr/lib/python3.12/tkinter
@@ -229,7 +229,7 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/include/python3.12/internal/*.h
 /usr/lib64/libpython3.12.so
 /usr/lib64/libpython3.so
-# /V3/usr/lib64/libpython3.so
+/V3/usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.12.pc
 /usr/lib64/pkgconfig/python-3.12-embed.pc
 /usr/lib64/pkgconfig/python3.pc
@@ -241,4 +241,4 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/bin/idle3.12
 /usr/lib/python3.12/tkinter
 /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
-# /V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
+/V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
