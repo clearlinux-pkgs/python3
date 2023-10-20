@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.0
-Release:        304
+Release:        305
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -80,6 +80,8 @@ Provides:       pypi(enum34)
 Provides:	pypi(pywin32)
 Provides:       pypi(typing)
 Requires:       pypi(setuptools)
+# horrible hack to be removed once qtwebtools goes away
+Provides:	pypi(nose)
 
 
 %description core
