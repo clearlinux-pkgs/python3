@@ -272,7 +272,7 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/lib64/libpython3.12.so
 /usr/lib64/libpython3.so
 /V3/usr/lib64/libpython3.so
-/VA/usr/lib64/libpython3.so
+%exclude /VA/usr/lib/libpython3.so
 /usr/lib64/pkgconfig/python-3.12.pc
 /usr/lib64/pkgconfig/python-3.12-embed.pc
 /usr/lib64/pkgconfig/python3.pc
