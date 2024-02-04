@@ -103,7 +103,7 @@ Requires:       python3-lib
 Requires:       python3-core
 Requires:       usrbinpython
 
-%define python_configure_flags --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto --with-computed-gotos --without-ensurepip
+%define python_configure_flags --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto --with-computed-gotos --without-ensurepip 
 
 
 %description dev
@@ -120,6 +120,7 @@ The Python Programming Language.
 
 pushd ..
 cp -a Python-%{version} Python-avx2
+cp -a Python-%{version} Python-apx
 cd Python-avx2
 popd
 
@@ -128,8 +129,12 @@ export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export LANG=C
+
+
 export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz"
 export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz"
+
+
 %configure %python_configure_flags --enable-shared
 SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
 
@@ -137,6 +142,19 @@ pushd ../Python-avx2
 export CFLAGS="$CFLAGS -march=x86-64-v3  "
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
 %configure %python_configure_flags --enable-shared
+SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
+popd
+
+
+pushd ../Python-apx
+export CFLAGS="$CFLAGS -march=x86-64-v3 -mapxf -mavx10.1  "
+export CC=/usr/bin/gcc-14
+export HOSTCC=/usr/bin/gcc
+export HOSTCFLAGS="-O2"
+export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
+export HOSTRUNNER=/usr/bin/python3
+%configure %python_configure_flags --enable-shared --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no --disable-test-modules
+sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
 SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
 popd
 
@@ -151,6 +169,10 @@ export LDFLAGS="$LDFLAGS -g1 -gz"
 
 pushd ../Python-avx2
 %make_install_v3
+popd
+
+pushd ../Python-apx
+%make_install_va
 popd
 
 %make_install
@@ -181,6 +203,19 @@ SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
 %make_install_v3
 popd
 
+pushd ../Python-apx
+make clean
+export CC=/usr/bin/gcc-14
+export HOSTCC=/usr/bin/gcc
+export HOSTCFLAGS="-O2"
+export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
+%configure %python_configure_flags --enable-optimizations --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no
+sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
+SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
+%make_install_va
+popd
+
+
 # Add /usr/local/lib/python*/site-packages to the python path
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.12/site-packages/usrlocal.pth
 # static library archives need to be writable for strip to work
@@ -194,6 +229,7 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.12-embed.pc
 
 /usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+/usr/bin/elf-move.py apx %{buildroot}-va %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 
 %files
@@ -201,6 +237,7 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 %files lib
 /usr/lib64/libpython3.12.so.1.0
 /V3/usr/lib64/libpython3.12.so.1.0
+%exclude /VA/usr/lib/libpython3.12.so.1.0
 
 %files staticdev
 /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
@@ -219,6 +256,9 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /V3/usr/lib/python3.12
 /V3/usr/bin/python3.12
 /V3/usr/lib/python3.12/config-3.12-x86_64-linux-gnu/python.o
+
+/VA/usr/bin/python3.12
+/VA/usr/lib/python3.12/
 /usr/share/man/man1/*
 %exclude /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
 %exclude /usr/lib/python3.12/tkinter
@@ -232,6 +272,7 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/lib64/libpython3.12.so
 /usr/lib64/libpython3.so
 /V3/usr/lib64/libpython3.so
+/VA/usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.12.pc
 /usr/lib64/pkgconfig/python-3.12-embed.pc
 /usr/lib64/pkgconfig/python3.pc
