@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.2
-Release:        316
+Release:        317
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -265,6 +265,7 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 %exclude /usr/lib/python3.12/tkinter
 %exclude /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
 %exclude /V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
+%exclude /VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
 
 %files dev
 /usr/include/python3.12/*.h
@@ -286,3 +287,4 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/lib/python3.12/tkinter
 /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
 /V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
+/VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
