@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.12.1
+Version:        3.12.2
 Release:        316
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.12.1/Python-3.12.1.tar.xz
+Source0:        https://www.python.org/ftp/python/3.12.2/Python-3.12.2.tar.xz
 Source1:        usrlocal.pth
 Patch1:         0001-Fix-python-path-for-linux.patch
 Patch2:         0002-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
@@ -131,7 +131,7 @@ export NM=gcc-nm
 export LANG=C
 
 
-export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz"
+export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz -Wl,-z,x86-64-v2"
 export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz"
 
 
@@ -139,7 +139,7 @@ export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info 
 SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
 
 pushd ../Python-avx2
-export CFLAGS="$CFLAGS -march=x86-64-v3  "
+export CFLAGS="$CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3  "
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
 %configure %python_configure_flags --enable-shared
 SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
@@ -184,7 +184,7 @@ export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export LANG=C
-export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition"
+export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -Wl,-z,x86-64-v2"
 
 # --enable-optimizations does not work with --enable-shared
 # https://bugs.python.org/issue29712
@@ -196,7 +196,7 @@ SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
 
 pushd ../Python-avx2
 make clean
-export CFLAGS="$CFLAGS -march=x86-64-v3  "
+export CFLAGS="$CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
 %configure %python_configure_flags --enable-optimizations
 SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
