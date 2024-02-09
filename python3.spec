@@ -196,7 +196,7 @@ SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
 
 pushd ../Python-avx2
 make clean
-export CFLAGS="$CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export CFLAGS="$CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 -mno-vzeroupper"
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
 %configure %python_configure_flags --enable-optimizations
 SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
