@@ -146,17 +146,17 @@ SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
 popd
 
 
-pushd ../Python-apx
-export CFLAGS="$CFLAGS -march=x86-64-v3 -mapxf -mavx10.1  "
-export CC=/usr/bin/gcc-14
-export HOSTCC=/usr/bin/gcc
-export HOSTCFLAGS="-O2"
-export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
-export HOSTRUNNER=/usr/bin/python3
-%configure %python_configure_flags --enable-shared --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no --disable-test-modules
-sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
-SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
-popd
+#pushd ../Python-apx
+#export CFLAGS="$CFLAGS -march=x86-64-v3 -mapxf -mavx10.1  "
+#export CC=/usr/bin/gcc-14
+#export HOSTCC=/usr/bin/gcc
+#export HOSTCFLAGS="-O2"
+#export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
+#export HOSTRUNNER=/usr/bin/python3
+#%configure %python_configure_flags --enable-shared --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no --disable-test-modules
+#sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
+#SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
+#popd
 
 %install
 export AR=gcc-ar
@@ -203,18 +203,18 @@ SETUPTOOLS_USE_DISTUTILS=stdlib make profile-opt %{?_smp_mflags}
 %make_install_v3
 popd
 
-pushd ../Python-apx
-make clean
-export CFLAGS="$CFLAGS -march=x86-64-v3 -mapxf -mavx10.1  "
-export CC=/usr/bin/gcc-14
-export HOSTCC=/usr/bin/gcc
-export HOSTCFLAGS="-O2"
-export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 "
-%configure %python_configure_flags --enable-optimizations --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no
-sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
-SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
-%make_install_va
-popd
+#pushd ../Python-apx
+#make clean
+#export CFLAGS="$CFLAGS -march=x86-64-v3 -mapxf -mavx10.1  "
+#export CC=/usr/bin/gcc-14
+#export HOSTCC=/usr/bin/gcc
+#export HOSTCFLAGS="-O2"
+#export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 "
+#%configure %python_configure_flags --enable-optimizations --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no
+#sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
+#SETUPTOOLS_USE_DISTUTILS=stdlib make %{?_smp_mflags}
+#%make_install_va
+#popd
 
 
 # Add /usr/local/lib/python*/site-packages to the python path
