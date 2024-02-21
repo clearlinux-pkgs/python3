@@ -258,8 +258,8 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /V3/usr/bin/python3.12
 /V3/usr/lib/python3.12/config-3.12-x86_64-linux-gnu/python.o
 
-#/VA/usr/bin/python3.12
-#/VA/usr/lib/python3.12/
+/VA/usr/bin/python3.12
+/VA/usr/lib/python3.12/
 /usr/share/man/man1/*
 %exclude /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
 %exclude /usr/lib/python3.12/tkinter
@@ -287,4 +287,4 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/lib/python3.12/tkinter
 /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
 /V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
-#/VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
+/VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
