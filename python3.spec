@@ -148,7 +148,7 @@ export CFLAGS="$CFLAGS -march=x86-64-v3 -mapxf -mavx10.1  "
 export CC=/usr/bin/gcc-14
 export HOSTCC=/usr/bin/gcc
 export HOSTCFLAGS="-O2"
-export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
+export CXXFLAGS="$CXXFLAGS -march=x86-64-v3   -mapxf -mavx10.1 "
 export HOSTRUNNER=/usr/bin/python3
 %configure %python_configure_flags --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no --disable-test-modules
 sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
