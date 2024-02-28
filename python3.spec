@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.2
-Release:        331
+Release:        332
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -44,7 +44,6 @@ BuildRequires:  pypi-pip
 BuildRequires:  util-linux-dev
 Requires: python3-core
 Requires: python3-lib
-Requires: usrbinpython
 Requires: pypi-pip
 
 %define keepstatic 1
@@ -92,7 +91,6 @@ Summary:        The Python Programming Language
 Group:          devel
 Requires:       python3-lib
 Requires:       python3-core
-Requires:       usrbinpython
 
 %package tcl
 License:        Python-2.0
@@ -100,7 +98,6 @@ Summary:        The Python Programming Language
 Group:          devel
 Requires:       python3-lib
 Requires:       python3-core
-Requires:       usrbinpython
 
 %define python_configure_flags --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto --with-computed-gotos --without-ensurepip --enable-shared --enable-optimizations
 
