@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.2
-Release:        328
+Release:        329
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -118,7 +118,7 @@ The Python Programming Language.
 
 pushd ..
 cp -a Python-%{version} Python-avx2
-cp -a Python-%{version} Python-apx
+# cp -a Python-%{version} Python-apx
 popd
 
 %build
@@ -135,19 +135,23 @@ make %{?_smp_mflags}
 popd
 
 
-pushd ../Python-apx
-export CFLAGS="$CFLAGS -march=x86-64-v3 -mapxf -mavx10.1  "
-export CC=/usr/bin/gcc-14
-export HOSTCC=/usr/bin/gcc
-export HOSTCFLAGS="-O2"
-export CXXFLAGS="$CXXFLAGS -march=x86-64-v3   -mapxf -mavx10.1 "
-export HOSTRUNNER=/usr/bin/python3
-%configure %python_configure_flags --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no --disable-test-modules
-sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
-make %{?_smp_mflags}
-popd
+# pushd ../Python-apx
+# export CFLAGS="$CFLAGS -march=x86-64-v3 -mapxf -mavx10.1  "
+# export CC=/usr/bin/gcc-14
+# export HOSTCC=/usr/bin/gcc
+# export HOSTCFLAGS="-O2"
+# export CXXFLAGS="$CXXFLAGS -march=x86-64-v3   -mapxf -mavx10.1 "
+# export HOSTRUNNER=/usr/bin/python3
+#configure %python_configure_flags --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no --disable-test-modules
+# sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
+# make %{?_smp_mflags}
+# popd
 
 
+export CC=/usr/bin/gcc
+unset HOSTCC
+unset HOSTCFLAGS
+unset HOSTRUNNER
 export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz -Wl,-z,x86-64-v2"
 export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz"
 
@@ -172,29 +176,32 @@ pushd ../Python-apx
 popd
 
 %make_install
-mkdir -p  %{buildroot}/usr/lib64/  %{buildroot}-v3/usr/lib64/  %{buildroot}-va/usr/lib64/
+mkdir -p %{buildroot}/usr/lib64/
+mkdir -p %{buildroot}-v3/usr/lib64/
+# mkdir -p %{buildroot}-va/usr/lib64/
 mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 mv %{buildroot}-v3/usr/lib/libpython*.so* %{buildroot}-v3/usr/lib64/
-mv %{buildroot}-va/usr/lib/libpython*.so* %{buildroot}-va/usr/lib64/
+# mv %{buildroot}-va/usr/lib/libpython*.so* %{buildroot}-va/usr/lib64/
 
 # Add /usr/local/lib/python*/site-packages to the python path
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.12/site-packages/usrlocal.pth
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
+ln -s python%{version} %{buildroot}/usr/bin/python
 
 # Post fixup for libdir in the .pc file
 sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.12-embed.pc
 
 /usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
-/usr/bin/elf-move.py apx %{buildroot}-va %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+# /usr/bin/elf-move.py apx %{buildroot}-va %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 
 %files lib
 /usr/lib64/libpython3.12.so.1.0
 /V3/usr/lib64/libpython3.12.so.1.0
-/VA/usr/lib64/libpython3.12.so.1.0
+# /VA/usr/lib64/libpython3.12.so.1.0
 
 %files staticdev
 /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
@@ -212,14 +219,14 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/share/man/man1/*
 /V3/usr/bin/python3.12
 /V3/usr/lib/python3.12
-/VA/usr/bin/python3.12
-/VA/usr/lib/python3.12
+# /VA/usr/bin/python3.12
+# /VA/usr/lib/python3.12
 
 %exclude /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
 %exclude /usr/lib/python3.12/tkinter
 %exclude /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
 %exclude /V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
-%exclude /VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
+#exclude /VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
 
 %files dev
 /usr/include/python3.12/*.h
@@ -228,7 +235,7 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/lib64/libpython3.12.so
 /usr/lib64/libpython3.so
 /V3/usr/lib64/libpython3.so
-/VA/usr/lib64/libpython3.so
+# /VA/usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.12.pc
 /usr/lib64/pkgconfig/python-3.12-embed.pc
 /usr/lib64/pkgconfig/python3.pc
@@ -241,4 +248,4 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/lib/python3.12/tkinter
 /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
 /V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
-/VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
+# /VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
