@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.2
-Release:        330
+Release:        331
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -211,6 +211,7 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/bin/2to3-3.12
 /usr/bin/pydoc3
 /usr/bin/pydoc3.12
+/usr/bin/python
 /usr/bin/python3
 /usr/bin/python3-config
 /usr/bin/python3.12
