@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.2
-Release:        327
+Release:        328
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -127,14 +127,6 @@ export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export LANG=C
 
-
-export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz -Wl,-z,x86-64-v2"
-export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz"
-
-
-%configure %python_configure_flags
-make %{?_smp_mflags}
-
 pushd ../Python-avx2
 export CFLAGS="$CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3  "
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
@@ -154,6 +146,13 @@ export HOSTRUNNER=/usr/bin/python3
 sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
 make %{?_smp_mflags}
 popd
+
+
+export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz -Wl,-z,x86-64-v2"
+export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz"
+
+%configure %python_configure_flags
+make %{?_smp_mflags}
 
 %install
 export AR=gcc-ar
@@ -210,13 +209,12 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/bin/python3.12
 /usr/bin/python3.12-config
 /usr/lib/python3.12
-/V3/usr/lib/python3.12
-/V3/usr/bin/python3.12
-/V3/usr/lib/python3.12/config-3.12-x86_64-linux-gnu/python.o
-
-/VA/usr/bin/python3.12
-/VA/usr/lib/python3.12/
 /usr/share/man/man1/*
+/V3/usr/bin/python3.12
+/V3/usr/lib/python3.12
+/VA/usr/bin/python3.12
+/VA/usr/lib/python3.12
+
 %exclude /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
 %exclude /usr/lib/python3.12/tkinter
 %exclude /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
@@ -230,7 +228,7 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/lib64/libpython3.12.so
 /usr/lib64/libpython3.so
 /V3/usr/lib64/libpython3.so
-/VA/usr/lib/libpython3.so
+/VA/usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.12.pc
 /usr/lib64/pkgconfig/python-3.12-embed.pc
 /usr/lib64/pkgconfig/python3.pc
