@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.2
-Release:        329
+Release:        330
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -171,9 +171,9 @@ pushd ../Python-avx2
 %make_install_v3
 popd
 
-pushd ../Python-apx
-%make_install_va
-popd
+# pushd ../Python-apx
+# make_install_va
+# popd
 
 %make_install
 mkdir -p %{buildroot}/usr/lib64/
