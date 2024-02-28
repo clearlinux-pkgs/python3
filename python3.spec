@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.2
-Release:        326
+Release:        327
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -173,9 +173,10 @@ pushd ../Python-apx
 popd
 
 %make_install
-mkdir -p  %{buildroot}/usr/lib64/  %{buildroot}-v3/usr/lib64/
+mkdir -p  %{buildroot}/usr/lib64/  %{buildroot}-v3/usr/lib64/  %{buildroot}-va/usr/lib64/
 mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
 mv %{buildroot}-v3/usr/lib/libpython*.so* %{buildroot}-v3/usr/lib64/
+mv %{buildroot}-va/usr/lib/libpython*.so* %{buildroot}-va/usr/lib64/
 
 # Add /usr/local/lib/python*/site-packages to the python path
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.12/site-packages/usrlocal.pth
@@ -194,7 +195,7 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 %files lib
 /usr/lib64/libpython3.12.so.1.0
 /V3/usr/lib64/libpython3.12.so.1.0
-/VA/usr/lib/libpython3.12.so.1.0
+/VA/usr/lib64/libpython3.12.so.1.0
 
 %files staticdev
 /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
