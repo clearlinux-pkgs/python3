@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.2
-Release:        332
+Release:        333
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -185,7 +185,7 @@ install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.12/site-packages/usrloca
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
-ln -s python%{version} %{buildroot}/usr/bin/python
+ln -s python3 %{buildroot}/usr/bin/python
 
 # Post fixup for libdir in the .pc file
 sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.12-embed.pc
