@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.2
-Release:        333
+Release:        334
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -119,25 +119,27 @@ cp -a Python-%{version} Python-avx2
 popd
 
 %build
+export INTERMEDIATE_CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz "
+export INTERMEDIATE_CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz "
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export LANG=C
 
 pushd ../Python-avx2
-export CFLAGS="$CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3  "
-export CXXFLAGS="$CXXFLAGS -march=x86-64-v3  "
+export CFLAGS="$INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export CXXFLAGS="$INTERMEDIATE_CXXFLAGS -march=x86-64-v3 "
 %configure %python_configure_flags
 make %{?_smp_mflags}
 popd
 
 
 # pushd ../Python-apx
-# export CFLAGS="$CFLAGS -march=x86-64-v3 -mapxf -mavx10.1  "
+# export CFLAGS="$INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 -mapxf -mavx10.1 "
 # export CC=/usr/bin/gcc-14
 # export HOSTCC=/usr/bin/gcc
 # export HOSTCFLAGS="-O2"
-# export CXXFLAGS="$CXXFLAGS -march=x86-64-v3   -mapxf -mavx10.1 "
+# export CXXFLAGS="$INTERMEDIATE_CXXFLAGS -march=x86-64-v3 -mapxf -mavx10.1 "
 # export HOSTRUNNER=/usr/bin/python3
 #configure %python_configure_flags --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no --disable-test-modules
 # sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
@@ -149,9 +151,8 @@ export CC=/usr/bin/gcc
 unset HOSTCC
 unset HOSTCFLAGS
 unset HOSTRUNNER
-export CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz -Wl,-z,x86-64-v2"
-export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz"
-
+export CFLAGS="$INTERMEDIATE_CFLAGS -Wl,-z,x86-64-v2 "
+export CXXFLAGS="$INTERMEDIATE_CXXFLAGS "
 %configure %python_configure_flags
 make %{?_smp_mflags}
 
