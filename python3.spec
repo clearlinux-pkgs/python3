@@ -1,6 +1,6 @@
 Name:           python3
 Version:        3.12.2
-Release:        335
+Release:        336
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
@@ -99,7 +99,7 @@ Group:          devel
 Requires:       python3-lib
 Requires:       python3-core
 
-%define python_configure_flags --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto --with-computed-gotos --without-ensurepip --enable-shared --enable-optimizations
+%define python_configure_flags --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto --with-computed-gotos --without-ensurepip --enable-optimizations
 
 
 %description dev
@@ -114,6 +114,7 @@ The Python Programming Language.
 %patch -P 2 -p1
 
 pushd ..
+cp -a Python-%{version} Python-shared
 cp -a Python-%{version} Python-avx2
 # cp -a Python-%{version} Python-apx
 popd
@@ -156,6 +157,11 @@ export CXXFLAGS="$INTERMEDIATE_CXXFLAGS "
 %configure %python_configure_flags
 PROFILE_TASK="-m test --pgo-extended" make profile-opt %{?_smp_mflags}
 
+pushd ../Python-shared
+%configure %python_configure_flags --enable-shared
+PROFILE_TASK="-m test --pgo-extended" make profile-opt %{?_smp_mflags}
+popd
+
 %install
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -177,9 +183,16 @@ popd
 mkdir -p %{buildroot}/usr/lib64/
 mkdir -p %{buildroot}-v3/usr/lib64/
 # mkdir -p %{buildroot}-va/usr/lib64/
-mv %{buildroot}/usr/lib/libpython*.so* %{buildroot}/usr/lib64/
-mv %{buildroot}-v3/usr/lib/libpython*.so* %{buildroot}-v3/usr/lib64/
-# mv %{buildroot}-va/usr/lib/libpython*.so* %{buildroot}-va/usr/lib64/
+mv %{buildroot}/usr/lib/libpython*.a %{buildroot}/usr/lib64/
+mv %{buildroot}-v3/usr/lib/libpython*.a %{buildroot}-v3/usr/lib64/
+# mv %{buildroot}-va/usr/lib/libpython*.a %{buildroot}-va/usr/lib64/
+
+# Toss in the one off built dynamic libpython
+# This is only built once as things that link against it are picky
+# if the same python that it links against at build time is different
+# than at runtime, so we can't use an alternate optimized version.
+mv ../Python-shared/libpython3.12.so.1.0 %{buildroot}/usr/lib64/
+mv ../Python-shared/libpython3.so %{buildroot}/usr/lib64/
 
 # Add /usr/local/lib/python*/site-packages to the python path
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.12/site-packages/usrlocal.pth
@@ -188,8 +201,11 @@ ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 ln -s python3 %{buildroot}/usr/bin/python
 
+ln -s libpython3.12.so.1.0 %{buildroot}/usr/lib64/libpython3.12.so
+
 # Post fixup for libdir in the .pc file
-sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.12-embed.pc
+sed -i'' -e 's|libdir=${exec_prefix}/lib|libdir=${exec_prefix}/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.12-embed.pc
+sed -i'' -e 's|libdir=${exec_prefix}/lib|libdir=${exec_prefix}/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.12.pc
 
 /usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 # /usr/bin/elf-move.py apx %{buildroot}-va %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
@@ -198,11 +214,10 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 
 %files lib
 /usr/lib64/libpython3.12.so.1.0
-/V3/usr/lib64/libpython3.12.so.1.0
-# /VA/usr/lib64/libpython3.12.so.1.0
 
 %files staticdev
 /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
+/usr/lib64//libpython3.12.a
 
 %files core
 /usr/bin/2to3
@@ -233,8 +248,6 @@ sed -i'' -e 's|libdir=/usr/lib|libdir=/usr/lib64|' %{buildroot}/usr/lib64/pkgcon
 /usr/include/python3.12/internal/*.h
 /usr/lib64/libpython3.12.so
 /usr/lib64/libpython3.so
-/V3/usr/lib64/libpython3.so
-# /VA/usr/lib64/libpython3.so
 /usr/lib64/pkgconfig/python-3.12.pc
 /usr/lib64/pkgconfig/python-3.12-embed.pc
 /usr/lib64/pkgconfig/python3.pc
