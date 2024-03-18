@@ -193,6 +193,11 @@ mv %{buildroot}-v3/usr/lib/libpython*.a %{buildroot}-v3/usr/lib64/
 mv ../Python-shared/libpython3.12.so.1.0 %{buildroot}/usr/lib64/
 mv ../Python-shared/libpython3.so %{buildroot}/usr/lib64/
 
+# Configure Python to return the dynamic libpython instead of the static lib for certain config variables
+sed -i "s|\('BLDLIBRARY':\s*\)'libpython\([0-9\.]*\).a'|\1'-L. -lpython\2'|" %{buildroot}/usr/lib/python3.12/_sysconfigdata__linux_x86_64-linux-gnu.py
+sed -i "s|\('INSTSONAME':\s*'libpython[0-9\.]*\).a\('\)|\1.so\2|" %{buildroot}/usr/lib/python3.12/_sysconfigdata__linux_x86_64-linux-gnu.py
+sed -i "s|\('LDLIBRARY':\s*'libpython[0-9\.]*\).a\('\)|\1.so\2|" %{buildroot}/usr/lib/python3.12/_sysconfigdata__linux_x86_64-linux-gnu.py
+
 # Add /usr/local/lib/python*/site-packages to the python path
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.12/site-packages/usrlocal.pth
 
