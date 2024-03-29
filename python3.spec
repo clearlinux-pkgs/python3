@@ -20,7 +20,6 @@ BuildRequires:  bzip2
 BuildRequires:  db
 BuildRequires:  grep
 BuildRequires:  bzip2-dev
-BuildRequires:  xz-dev
 BuildRequires:  gdbm-dev
 BuildRequires:  readline-dev
 BuildRequires:  openssl
