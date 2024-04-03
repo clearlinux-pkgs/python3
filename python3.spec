@@ -20,6 +20,7 @@ BuildRequires:  bzip2
 BuildRequires:  db
 BuildRequires:  grep
 BuildRequires:  bzip2-dev
+BuildRequires:  xz-dev
 BuildRequires:  gdbm-dev
 BuildRequires:  readline-dev
 BuildRequires:  openssl
@@ -98,6 +99,13 @@ Group:          devel
 Requires:       python3-lib
 Requires:       python3-core
 
+%package xz-lzma
+License:        Python-2.0
+Summary:        The Python Programming Language
+Group:          devel
+Requires:       python3-lib
+Requires:       python3-core
+
 %define python_configure_flags --with-threads --with-pymalloc  --without-cxx-main --with-signal-module --enable-ipv6=yes  --libdir=/usr/lib  ac_cv_header_bluetooth_bluetooth_h=no  ac_cv_header_bluetooth_h=no  --with-system-ffi --with-system-expat --with-lto --with-computed-gotos --without-ensurepip --enable-optimizations
 
 
@@ -106,6 +114,9 @@ The Python Programming Language.
 
 %description tcl
 The Python Programming Language.
+
+%description xz-lzma
+Support for XZ/LZMA compression in Python.
 
 %prep
 %setup -q -n Python-%{version}
@@ -245,6 +256,8 @@ sed -i'' -e 's|libdir=${exec_prefix}/lib|libdir=${exec_prefix}/lib64|' %{buildro
 %exclude /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
 %exclude /V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
 #exclude /VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
+%exclude /usr/lib/python3.12/lib-dynload/_lzma.cpython-312-x86_64-linux-gnu.so
+%exclude /V3/usr/lib/python3.12/lib-dynload/_lzma.cpython-312-x86_64-linux-gnu.so
 
 %files dev
 /usr/include/python3.12/*.h
@@ -265,3 +278,7 @@ sed -i'' -e 's|libdir=${exec_prefix}/lib|libdir=${exec_prefix}/lib64|' %{buildro
 /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
 /V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
 # /VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
+
+%files xz-lzma
+/usr/lib/python3.12/lib-dynload/_lzma.cpython-312-x86_64-linux-gnu.so
+/V3/usr/lib/python3.12/lib-dynload/_lzma.cpython-312-x86_64-linux-gnu.so
