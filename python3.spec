@@ -126,7 +126,7 @@ Support for XZ/LZMA compression in Python.
 pushd ..
 cp -a Python-%{version} Python-shared
 cp -a Python-%{version} Python-avx2
-# cp -a Python-%{version} Python-apx
+cp -a Python-%{version} Python-apx
 popd
 
 %build
@@ -185,9 +185,9 @@ pushd ../Python-avx2
 %make_install_v3
 popd
 
-# pushd ../Python-apx
-# make_install_va
-# popd
+pushd ../Python-apx
+make_install_va
+popd
 
 %make_install
 mkdir -p %{buildroot}/usr/lib64/
