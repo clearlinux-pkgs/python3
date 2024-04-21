@@ -145,17 +145,17 @@ PROFILE_TASK="-m test --pgo-extended" make profile-opt %{?_smp_mflags}
 popd
 
 
-# pushd ../Python-apx
-# export CFLAGS="$INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 -mapxf -mavx10.1 -mno-vzeroupper "
+pushd ../Python-apx
+export CFLAGS="$INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 -mapxf -mavx10.1 -mno-vzeroupper "
 # export CC=/usr/bin/gcc-14
 # export HOSTCC=/usr/bin/gcc
 # export HOSTCFLAGS="-O2"
-# export CXXFLAGS="$INTERMEDIATE_CXXFLAGS -march=x86-64-v3 -mapxf -mavx10.1 "
-# export HOSTRUNNER=/usr/bin/python3
-#configure %python_configure_flags --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no --disable-test-modules
-# sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
-# PROFILE_TASK="-m test --pgo-extended" make profile-opt %{?_smp_mflags}
-# popd
+export CXXFLAGS="$INTERMEDIATE_CXXFLAGS -march=x86-64-v3 -mapxf -mavx10.1 "
+export HOSTRUNNER=/usr/bin/python3
+%configure %python_configure_flags --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no --disable-test-modules
+sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
+PROFILE_TASK="-m test --pgo-extended" make profile-opt %{?_smp_mflags}
+popd
 
 
 export CC=/usr/bin/gcc
