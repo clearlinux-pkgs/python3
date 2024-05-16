@@ -186,7 +186,7 @@ pushd ../Python-avx2
 popd
 
 pushd ../Python-apx
-make_install_va
+%make_install_va
 popd
 
 %make_install
