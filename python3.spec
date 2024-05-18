@@ -138,8 +138,8 @@ export NM=gcc-nm
 export LANG=C
 
 pushd ../Python-avx2
-export CFLAGS="$INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-export CXXFLAGS="$INTERMEDIATE_CXXFLAGS -march=x86-64-v3 "
+export CFLAGS="$INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 -mno-vzeroupper "
+export CXXFLAGS="$INTERMEDIATE_CXXFLAGS -march=x86-64-v3 -mno-vzeroupper "
 %configure %python_configure_flags
 PROFILE_TASK="-m test --pgo-extended" make profile-opt %{?_smp_mflags}
 popd
