@@ -130,8 +130,8 @@ cp -a Python-%{version} Python-apx
 popd
 
 %build
-export INTERMEDIATE_CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz "
-export INTERMEDIATE_CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz "
+export INTERMEDIATE_CFLAGS="$CFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz  -mmove-max=128 -mstore-max=128"
+export INTERMEDIATE_CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz -mmove-max=128 -mstore-max=128"
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
