@@ -1,14 +1,13 @@
 Name:           python3
-Version:        3.12.7
-Release:        349
+Version:        3.13.0
+Release:        350
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.12.7/Python-3.12.7.tar.xz
+Source0:        https://www.python.org/ftp/python/3.13.0/Python-3.13.0.tar.xz
 Source1:        usrlocal.pth
-Patch1:         0001-Fix-python-path-for-linux.patch
-Patch2:         0002-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
+Patch1:         0002-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
 
 # Suppress stripping binaries
 %define __strip /bin/true
@@ -121,12 +120,9 @@ Support for XZ/LZMA compression in Python.
 %prep
 %setup -q -n Python-%{version}
 %patch -P 1 -p1
-%patch -P 2 -p1
 
 pushd ..
 cp -a Python-%{version} Python-shared
-cp -a Python-%{version} Python-avx2
-cp -a Python-%{version} Python-apx
 popd
 
 %build
@@ -136,27 +132,6 @@ export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export LANG=C
-
-pushd ../Python-avx2
-export CFLAGS="$INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 -mno-vzeroupper "
-export CXXFLAGS="$INTERMEDIATE_CXXFLAGS -march=x86-64-v3 -mno-vzeroupper "
-%configure %python_configure_flags
-PROFILE_TASK="-m test --pgo-extended" make profile-opt %{?_smp_mflags}
-popd
-
-
-pushd ../Python-apx
-export CFLAGS="$INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 -mapxf -mavx10.1 -mno-vzeroupper "
-# export CC=/usr/bin/gcc-14
-# export HOSTCC=/usr/bin/gcc
-# export HOSTCFLAGS="-O2"
-export CXXFLAGS="$INTERMEDIATE_CXXFLAGS -march=x86-64-v3 -mapxf -mavx10.1 "
-export HOSTRUNNER=/usr/bin/python3
-%configure %python_configure_flags --host=x86_64-clr-linux-gnu --with-build-python=/usr/bin/python3 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no --disable-test-modules
-sed -i -e "s/ scripts checksharedmods rundsymutil/ scripts rundsymutil/" Makefile
-PROFILE_TASK="-m test --pgo-extended" make profile-opt %{?_smp_mflags}
-popd
-
 
 export CC=/usr/bin/gcc
 unset HOSTCC
@@ -181,104 +156,79 @@ export CXXFLAGS="$CXXFLAGS -O3 -fno-semantic-interposition -g1 -gno-column-info 
 export LDFLAGS="$LDFLAGS -g1 -gz"
 
 
-pushd ../Python-avx2
-%make_install_v3
-popd
-
-pushd ../Python-apx
-%make_install_va
-popd
-
 %make_install
 mkdir -p %{buildroot}/usr/lib64/
-mkdir -p %{buildroot}-v3/usr/lib64/
-# mkdir -p %{buildroot}-va/usr/lib64/
 mv %{buildroot}/usr/lib/libpython*.a %{buildroot}/usr/lib64/
-mv %{buildroot}-v3/usr/lib/libpython*.a %{buildroot}-v3/usr/lib64/
-# mv %{buildroot}-va/usr/lib/libpython*.a %{buildroot}-va/usr/lib64/
 
 # Toss in the one off built dynamic libpython
 # This is only built once as things that link against it are picky
 # if the same python that it links against at build time is different
 # than at runtime, so we can't use an alternate optimized version.
-mv ../Python-shared/libpython3.12.so.1.0 %{buildroot}/usr/lib64/
+mv ../Python-shared/libpython3.13.so.1.0 %{buildroot}/usr/lib64/
 mv ../Python-shared/libpython3.so %{buildroot}/usr/lib64/
 
 # Configure Python to return the dynamic libpython instead of the static lib for certain config variables
-sed -i "s|\('BLDLIBRARY':\s*\)'libpython\([0-9\.]*\).a'|\1'-L. -lpython\2'|" %{buildroot}/usr/lib/python3.12/_sysconfigdata__linux_x86_64-linux-gnu.py
-sed -i "s|\('INSTSONAME':\s*'libpython[0-9\.]*\).a\('\)|\1.so\2|" %{buildroot}/usr/lib/python3.12/_sysconfigdata__linux_x86_64-linux-gnu.py
-sed -i "s|\('LDLIBRARY':\s*'libpython[0-9\.]*\).a\('\)|\1.so\2|" %{buildroot}/usr/lib/python3.12/_sysconfigdata__linux_x86_64-linux-gnu.py
+sed -i "s|\('BLDLIBRARY':\s*\)'libpython\([0-9\.]*\).a'|\1'-L. -lpython\2'|" %{buildroot}/usr/lib/python3.13/_sysconfigdata__linux_x86_64-linux-gnu.py
+sed -i "s|\('INSTSONAME':\s*'libpython[0-9\.]*\).a\('\)|\1.so\2|" %{buildroot}/usr/lib/python3.13/_sysconfigdata__linux_x86_64-linux-gnu.py
+sed -i "s|\('LDLIBRARY':\s*'libpython[0-9\.]*\).a\('\)|\1.so\2|" %{buildroot}/usr/lib/python3.13/_sysconfigdata__linux_x86_64-linux-gnu.py
 
 # Add /usr/local/lib/python*/site-packages to the python path
-install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.12/site-packages/usrlocal.pth
+install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/python3.13/site-packages/usrlocal.pth
 
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python3
 ln -s python%{version} %{buildroot}/usr/share/man/man1/python
 ln -s python3 %{buildroot}/usr/bin/python
 
-ln -s libpython3.12.so.1.0 %{buildroot}/usr/lib64/libpython3.12.so
+ln -s libpython3.13.so.1.0 %{buildroot}/usr/lib64/libpython3.13.so
 
 # Post fixup for libdir in the .pc file
-sed -i'' -e 's|libdir=${exec_prefix}/lib|libdir=${exec_prefix}/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.12-embed.pc
-sed -i'' -e 's|libdir=${exec_prefix}/lib|libdir=${exec_prefix}/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.12.pc
-
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
-# /usr/bin/elf-move.py apx %{buildroot}-va %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+sed -i'' -e 's|libdir=${exec_prefix}/lib|libdir=${exec_prefix}/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.13-embed.pc
+sed -i'' -e 's|libdir=${exec_prefix}/lib|libdir=${exec_prefix}/lib64|' %{buildroot}/usr/lib64/pkgconfig/python-3.13.pc
 
 %files
 
 %files lib
-/usr/lib64/libpython3.12.so.1.0
+/usr/lib64/libpython3.13.so.1.0
 
 %files staticdev
-/usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
-/usr/lib64//libpython3.12.a
+/usr/lib/python3.13/config-3.13-x86_64-linux-gnu/libpython3.13.a
+/usr/lib64//libpython3.13.a
 
 %files core
-/usr/bin/2to3
-/usr/bin/2to3-3.12
 /usr/bin/pydoc3
-/usr/bin/pydoc3.12
+/usr/bin/pydoc3.13
 /usr/bin/python
 /usr/bin/python3
 /usr/bin/python3-config
-/usr/bin/python3.12
-/usr/bin/python3.12-config
-/usr/lib/python3.12
+/usr/bin/python3.13
+/usr/bin/python3.13-config
+/usr/lib/python3.13
 /usr/share/man/man1/*
-/V3/usr/bin/python3.12
-/V3/usr/lib/python3.12
-# /VA/usr/bin/python3.12
-# /VA/usr/lib/python3.12
 
-%exclude /usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
-%exclude /usr/lib/python3.12/tkinter
-%exclude /usr/lib/python3.12/config-3.12-x86_64-linux-gnu/libpython3.12.a
-%exclude /V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
-#exclude /VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.so
-%exclude /usr/lib/python3.12/lib-dynload/_lzma.cpython-312-x86_64-linux-gnu.so
-%exclude /V3/usr/lib/python3.12/lib-dynload/_lzma.cpython-312-x86_64-linux-gnu.so
+%exclude /usr/lib/python3.13/lib-dynload/_tkinter.cpython-313-x86_64-linux-gnu.so
+%exclude /usr/lib/python3.13/tkinter
+%exclude /usr/lib/python3.13/config-3.13-x86_64-linux-gnu/libpython3.13.a
+%exclude /usr/lib/python3.13/lib-dynload/_lzma.cpython-313-x86_64-linux-gnu.so
 
 %files dev
-/usr/include/python3.12/*.h
-/usr/include/python3.12/cpython/*.h
-/usr/include/python3.12/internal/*.h
-/usr/lib64/libpython3.12.so
+/usr/include/python3.13/*.h
+/usr/include/python3.13/cpython/*.h
+/usr/include/python3.13/internal/*.h
+/usr/include/python3.13/internal/mimalloc/*.h
+/usr/include/python3.13/internal/mimalloc/mimalloc/*.h
+/usr/lib64/libpython3.13.so
 /usr/lib64/libpython3.so
-/usr/lib64/pkgconfig/python-3.12.pc
-/usr/lib64/pkgconfig/python-3.12-embed.pc
+/usr/lib64/pkgconfig/python-3.13.pc
+/usr/lib64/pkgconfig/python-3.13-embed.pc
 /usr/lib64/pkgconfig/python3.pc
 /usr/lib64/pkgconfig/python3-embed.pc
 
 
 %files tcl
 /usr/bin/idle3
-/usr/bin/idle3.12
-/usr/lib/python3.12/tkinter
-/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
-/V3/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
-# /VA/usr/lib/python3.12/lib-dynload/_tkinter.cpython-312-x86_64-linux-gnu.*
+/usr/bin/idle3.13
+/usr/lib/python3.13/tkinter
+/usr/lib/python3.13/lib-dynload/_tkinter.cpython-313-x86_64-linux-gnu.*
 
 %files xz-lzma
-/usr/lib/python3.12/lib-dynload/_lzma.cpython-312-x86_64-linux-gnu.so
-/V3/usr/lib/python3.12/lib-dynload/_lzma.cpython-312-x86_64-linux-gnu.so
+/usr/lib/python3.13/lib-dynload/_lzma.cpython-313-x86_64-linux-gnu.so
