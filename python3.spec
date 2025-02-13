@@ -1,11 +1,11 @@
 Name:           python3
-Version:        3.13.0
+Version:        3.13.2
 Release:        353
 License:        Python-2.0
 Summary:        The Python Programming Language
 Url:            https://www.python.org
 Group:          devel/python
-Source0:        https://www.python.org/ftp/python/3.13.0/Python-3.13.0.tar.xz
+Source0:        https://www.python.org/ftp/python/3.13.2/Python-3.13.2.tar.xz
 Source1:        usrlocal.pth
 Patch1:         0002-test_socket.py-remove-testPeek-test.test_socket.RDST.patch
 
